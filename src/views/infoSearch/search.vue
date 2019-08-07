@@ -2,6 +2,19 @@
 @import "../../base/css/base-var.scss";
 .contant {
   width: 100%;
+  .tab {
+    height: 57px;
+    line-height: 57px;
+    padding-left:30px;
+    background: #fff;
+    color:#999;
+    .cur{
+      color:#333;
+    }
+  }
+  .search{
+    float:right;
+  }
   .home-title {
     width: 100%;
     display: flex;
@@ -82,13 +95,9 @@
     }
   }
   .home-echarts {
-    margin-top: 20px;
     min-height: 600px;
     text-align: center;
-    display: flex;
-    display: flex;
     & > div {
-      float: left;
       background: #fff;
       border-radius: 6px;
       padding: 20px;
@@ -164,6 +173,10 @@
     }
     .rightchart {
       flex: 1.17;
+      border-left:1px solid #DFE3E9;
+      .topchart{
+        padding:8px 15px 11px 15px;
+      }
     }
   }
 }
@@ -171,11 +184,36 @@
 
 <template>
   <div class="contant">
+    <div class="tab" style="border-bottom:1px solid #DFE3E9">
+      <el-row>
+        <el-col :span="6">
+          <i class="el-icon-arrow-left"></i>术语展示 / <span class="cur">术语搜索</span>
+        </el-col>
+        <el-col :span="18">
+      <div class="search">
+        <div style="margin-top: 0px;">
+          <el-select v-model="ctype" placeholder="模糊匹配" style="width:160px;margin-right:0px;">
+            <el-option
+              v-for="item in ctypelist"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <el-input placeholder="请输入内容" v-model="inputTxt" class=""  style="width:460px;height:36px;margin-left:13px;">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+        </div>
+    </div>
+        </el-col>
+      </el-row>
     <div>
     <div class="home-echarts">
+      <el-row>
+        <el-col :span="11">
       <div class="leftchart">
         <div class="ecahrt-title">
-          <span>数据录入情况</span>
+          <span></span>
         </div>
         <div class="echart-main">
           <div class="line-title">
@@ -184,32 +222,44 @@
           <div id="linecharts"></div>
         </div>
       </div>
+        </el-col>
+        <el-col :span="13">
       <div class="rightchart">
         <div class="topchart">
-          <div class="piecharts">
-            <div>语义标签</div>
-
-            <el-table :data="tableData3" :show-header=false height="300" border style="width:160">
-              <el-table-column prop="name" label=""></el-table-column>
-              <el-table-column prop="num" label=""></el-table-column>
-            </el-table>
-          </div>
-          <div class="piecharts">
-            <el-table :data="termstable" height="300" border style="width:460">
-              <el-table-column prop="hospital" label="临床术语中文"></el-table-column>
-              <el-table-column prop="dept" label="英文同义词"></el-table-column>
-              <el-table-column prop="applyName" label="英文标准"></el-table-column>
-            </el-table>
-          </div>
+          <el-row>
+            <el-col :span="12">
+              <div class="piecharts">
+                <div style="height:48px;line-height:48px;background:rgba(84,115,232,0.2);">语义标签</div>
+                <el-table :data="tableData3" :show-header=false border style="width:160">
+                  <el-table-column prop="name" label=""></el-table-column>
+                  <el-table-column prop="num" label=""></el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="piecharts" style="margin-left:12px;">
+                <el-table :data="termstable" border style="width:460">
+                  <el-table-column prop="hospital" label="临床术语中文"></el-table-column>
+                  <el-table-column prop="dept" label="英文同义词"></el-table-column>
+                  <el-table-column prop="applyName" label="英文标准"></el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+          </el-row>
         </div>
         <div class="bottomchart">
-          <div id="">
+          <el-row>
+            <el-col :span="6">
             <div class="chartTitle">同义词</div>
-          </div>
-          <div id="">
+            </el-col>
+            <el-col :span="18">
             <div class="chartTitle">概念图谱</div>
+            </el-col>
+          </el-row>
           </div>
         </div>
+        </el-col>
+      </el-row>
       </div>
     </div>
     </div>
@@ -268,7 +318,19 @@ export default {
           name: "病患",
           num: "12",
         },
-      ]
+      ],
+      ctypelist:[
+        {
+          name:'模糊匹配（英文）',
+          id:2
+        },
+        {
+          name:'模糊匹配（中文）',
+          id:3
+        },
+      ],
+      inputTxt:'',
+      ctype:'',
     };
   },
   methods: {
