@@ -9,6 +9,7 @@ import store from '@/store/index.js';
 import { sync } from 'vuex-router-sync';
 import 'base/js/axios.js';
 import ElementUI from 'element-ui';
+import echarts from 'echarts'
 // import 'element-ui/lib/theme-chalk/index.css';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'iview/dist/styles/iview.css';
@@ -23,6 +24,7 @@ Vue.component('Step', Step);
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+Vue.prototype.$echarts = echarts
 
 sync(store, router);
 
