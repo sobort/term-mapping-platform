@@ -1,0 +1,247 @@
+// @import 'base/font/iconfont.css';
+a,
+body,
+button,
+dd,
+div,
+dl,
+dt,
+form,
+html,
+img,
+input,
+li,
+ol,
+p,
+span,
+table,
+tbody,
+td,
+th,
+thead,
+tr,
+ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+
+/*菜单关闭*/
+
+.el-menu-vertical-demo .el-submenu>.el-submenu__title .el-submenu__icon-arrow {
+    -webkit-transform: rotateZ(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotateZ(-90deg);
+}
+
+
+/*菜单展开*/
+
+.el-menu-vertical-demo .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+    -webkit-transform: rotateZ(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotateZ(0deg);
+}
+
+.acside {
+    .el-submenu>.el-submenu__title .el-submenu__icon-arrow {
+        display: none !important;
+    }
+    .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+        display: none !important;
+    }
+}
+
+.el-tabs__item.is-active,
+.el-tabs__item:hover {
+    color: #555f6d;
+}
+
+.biotabs {
+    .el-tabs__item.is-active {
+        background: #e9ebee;
+    }
+}
+
+.el-tabs__active-bar {
+    background: #0088FF;
+}
+
+.el-button--primary {
+    background-color: #2983cf;
+    border-color: #2983cf;
+}
+
+.el-button.is-plain:focus,
+.el-button.is-plain:hover {
+    border-color: #2983cf;
+    color: #2983cf;
+}
+
+.el-dialog__title {
+    font-weight: bold;
+}
+
+.el-input__prefix {
+    right: 5px;
+    left: inherit;
+    color: #0088FF;
+}
+
+.el-input--prefix .el-input__inner {
+    padding-left: 15px;
+}
+
+.el-select .el-input.is-focus .el-input__inner,
+.el-select .el-input__inner:focus,
+.el-input__inner:focus,
+.el-radio__inner:hover,
+.el-checkbox__inner:hover,
+.el-checkbox__input.is-focus .el-checkbox__inner {
+    border-color: #0088FF;
+}
+
+.el-select-dropdown__item.selected,
+.el-radio__input.is-checked+.el-radio__label,
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: #0088FF;
+}
+
+.el-radio__input.is-checked .el-radio__inner,
+.el-checkbox__input.is-checked .el-checkbox__inner {
+    border-color: #0088FF;
+    background: #0088FF;
+}
+
+.login-main {
+    .el-input__prefix {
+        right: inherit;
+        left: 5px;
+        color: #ddd;
+    }
+    .el-input--prefix .el-input__inner {
+        padding-left: 30px;
+    }
+}
+
+.search {
+    i.el-icon-biosearch {
+        color: #0088FF;
+    }
+    .el-input__suffix {
+        color: #0088FF;
+    }
+}
+
+.el-badge__content.is-fixed {
+    top: 10px;
+    right: 17px;
+}
+
+.el-badge__content {
+    background-color: rgba($color: #000000, $alpha: 0);
+    border-color: rgba($color: #000000, $alpha: 0);
+    color: #ee2929;
+}
+
+.ivu-steps .ivu-steps-head-inner {
+    width: 40px;
+    height: 40px;
+    font-size: 28px;
+    line-height: 40px;
+}
+
+.ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
+    border-color: #0088FF;
+    background-color: #0088FF;
+}
+
+.ivu-steps .ivu-steps-title {
+    font-size: 28px;
+    line-height: 40px;
+}
+
+.ivu-steps .ivu-steps-tail {
+    top: 20px;
+}
+
+.ivu-steps-item.ivu-steps-status-wait .ivu-steps-head-inner {
+    background-color: #ccc;
+    span {
+        color: #fff;
+    }
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner,
+.el-textarea__inner:focus {
+    border-color: #0088FF;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span,
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner>.ivu-steps-icon {
+    color: #0088FF;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail>i:after {
+    background: #0088FF;
+}
+
+.infotable {
+    .delete {
+        .iconfont {
+            font-size: 20px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-title {
+    color: #666;
+}
+
+.btn-right {
+    .el-input-group__prepend {
+        width: 100px;
+    }
+}
+
+.el-upload-list--picture .el-upload-list__item {
+    width: 160px;
+    height: 105px;
+    padding: 5px;
+}
+
+.el-upload-list--picture .el-upload-list__item-thumbnail {
+    width: 100%;
+    height: 100%;
+    margin-left: 0px;
+}
+
+.el-upload-list__item .el-icon-close {
+    z-index: 999;
+}
+
+.el-upload-list--picture .el-upload-list__item-status-label {
+    z-index: 999;
+}
+
+.el-upload-list--picture .el-upload-list__item-name {
+    display: none;
+}
+
+.el-tree-node__content {
+    height: 50px;
+}
+
+.el-date-editor.el-input,
+.el-date-editor.el-input__inner {
+    width: 350px;
+}
