@@ -40,7 +40,9 @@
             呼吸病学标准临床术语
           </div>
         </el-col>
-        <div id="bar" style="width: 300px; height: 300px;"></div>
+        <div>
+          <div id="bar" style="width: 300px; height: 300px;"></div>
+        </div>
       </el-col>
       <el-col :span="10">诊断</el-col>
     </el-row>
@@ -56,7 +58,7 @@ export default {
       homeValue: ""
     };
   },
-  created(){
+  mounted(){
     this.initChart()
   },
   methods: {

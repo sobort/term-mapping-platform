@@ -2,183 +2,51 @@
 @import "../../base/css/base-var.scss";
 .contant {
   width: 100%;
+  height: 100%;
+  overflow-y: hidden;
   .tab {
     height: 57px;
     line-height: 57px;
-    padding-left:30px;
     background: #fff;
-    color:#999;
-    .cur{
-      color:#333;
-    }
+    color: #000;
   }
-  .search{
-    float:right;
+  .home-echarts{
+    height: 100%;
   }
-  .home-title {
-    width: 100%;
-    display: flex;
-    & > div {
-      float: left;
-      flex: 1;
-      height: 130px;
-      background: #fff;
-      border-radius: 6px;
-      display: flex;
-      padding: 20px;
-      box-sizing: border-box;
-      .title-left,
-      .title-right {
-        float: left;
-      }
-      .title-left {
-        flex: 2;
-        text-align: left;
-        p {
-          font-size: 16px;
-          line-height: 28px;
-        }
-        div {
-          font-size: 36px;
-          font-weight: bold;
-          line-height: 60px;
-          i {
-            vertical-align: middle;
-            font-size: 20px;
-          }
-          .el-icon-bioup {
-            color: $upcolor;
-          }
-          .el-icon-biodown {
-            color: $maincolor;
-          }
-        }
-      }
-      .title-right {
-        flex: 1;
-        & > div {
-          width: 65px;
-          height: 65px;
-          border-radius: 50%;
-          margin: 10px auto;
-          text-align: center;
-          i {
-            font-size: 40px;
-            vertical-align: middle;
-            margin-top: 18px;
-            color: #fff;
-          }
-        }
-        & > div.biolung {
-          i {
-            font-size: 50px;
-            margin-top: 10px;
-          }
-          background: #2f4056;
-        }
-        & > div.biocolorectum {
-          background: #ff5722;
-        }
-        & > div.biobreast {
-          background: #f7b824;
-        }
-        & > div.biogastric {
-          background: #009688;
-        }
-        & > div.biocarcinoma {
-          background: #01aaed;
-        }
-      }
-    }
-    & > div + div {
-      margin-left: 20px;
-    }
-  }
-  .home-echarts {
-    min-height: 600px;
-    text-align: center;
-    & > div {
-      background: #fff;
-      border-radius: 6px;
-      padding: 20px;
-      .ecahrt-title {
-        height: 50px;
-        text-align: left;
-        line-height: 50px;
-        font-weight: bold;
+  .bottomchart{
+    margin-top: 20px;
+    border-top: 2px solid #EFF3F6;
+    .synonym{
+      margin: 10px;
+      .chartTitle{
+        margin: 20px 0px;
         font-size: 18px;
-        i {
-          font-size: 24px;
-          vertical-align: middle;
-          color: $maincolor;
-          margin-top: 5px;
-        }
       }
-      .echart-main {
-        width: 100%;
-        height: 510px;
-        padding: 15px 30px;
-        box-sizing: border-box;
-        .line-title {
-          width: 100%;
-          height: 85px;
-          display: flex;
-          & > div {
-            flex: 1;
-            float: left;
-            box-sizing: border-box;
-            border-left: 1px solid #ddd;
-            p {
-              font-size: 14px;
-              line-height: 28px;
-              margin-top: 15px;
-            }
-            span {
-              font-weight: bold;
-              font-size: 28px;
-            }
-            i {
-              font-size: 20px;
-            }
-            .el-icon-bioup {
-              color: $upcolor;
-            }
-            .el-icon-biodown {
-              color: $maincolor;
-            }
-          }
-          & > div:first-of-type {
-            border-left: 1px solid rgba($color: #000000, $alpha: 0);
-          }
-          & > div:hover,
-          .line-active {
-            background: #ddd;
-          }
-        }
-        #linecharts {
-          width: 100%;
-          height: 425px;
-        }
+      p{
+        margin: 10px 0px;
+        font-size: 16px;
       }
-      #piecharts {
-        width: 100%;
-        height: 510px;
-      }
-    }
-    & > div + div {
-      margin-left: 20px;
-    }
-    .leftchart {
-      flex: 1;
-    }
-    .rightchart {
-      flex: 1.17;
-      border-left:1px solid #DFE3E9;
-      .topchart{
-        padding:8px 15px 11px 15px;
+      .similar{
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        background: #D7F3F5;
+        border-radius: 5px;
+        margin: 10px 0px;
+        text-align: center;
+        color: #57CCD7;
+        font-size: 16px;
       }
     }
   }
+}
+</style>
+<style lang="less">
+.semantic-tags{
+  border-radius: 10px;
+  background: #E6E6E6;
+  width: 40px;
+  color: #fff;
 }
 </style>
 
@@ -186,162 +54,284 @@
   <div class="contant">
     <div class="tab" style="border-bottom:1px solid #DFE3E9">
       <el-row>
-        <el-col :span="6">
-          <i class="el-icon-arrow-left"></i>术语展示 / <span class="cur">术语搜索</span>
+        <el-col :span="12">
+          <span style="margin-left: 30px;">术语搜索</span>
         </el-col>
-        <el-col :span="18">
-      <div class="search">
-        <div style="margin-top: 0px;">
-          <el-select v-model="ctype" placeholder="模糊匹配" style="width:160px;margin-right:0px;">
-            <el-option
-              v-for="item in ctypelist"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入内容" v-model="inputTxt" class=""  style="width:460px;height:36px;margin-left:13px;">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </div>
-    </div>
-        </el-col>
-      </el-row>
-    <div>
-    <div class="home-echarts">
-      <el-row>
-        <el-col :span="11">
-      <div class="leftchart">
-        <div class="ecahrt-title">
-          <span></span>
-        </div>
-        <div class="echart-main">
-          <div class="line-title">
-
-          </div>
-          <div id="linecharts"></div>
-        </div>
-      </div>
-        </el-col>
-        <el-col :span="13">
-      <div class="rightchart">
-        <div class="topchart">
-          <el-row>
-            <el-col :span="12">
-              <div class="piecharts">
-                <div style="height:48px;line-height:48px;background:rgba(84,115,232,0.2);">语义标签</div>
-                <el-table :data="tableData3" :show-header=false border style="width:160">
-                  <el-table-column prop="name" label=""></el-table-column>
-                  <el-table-column prop="num" label=""></el-table-column>
-                </el-table>
-              </div>
-            </el-col>
-            <el-col :span="12">
-              <div class="piecharts" style="margin-left:12px;">
-                <el-table :data="termstable" border style="width:460">
-                  <el-table-column prop="hospital" label="临床术语中文"></el-table-column>
-                  <el-table-column prop="dept" label="英文同义词"></el-table-column>
-                  <el-table-column prop="applyName" label="英文标准"></el-table-column>
-                </el-table>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="bottomchart">
+        <el-col :span="12">
           <el-row>
             <el-col :span="6">
-            <div class="chartTitle">同义词</div>
+              <div style="margin-left: 10px;">
+                <el-select v-model="ctype" placeholder="模糊匹配">
+                  <el-option
+                    v-for="item in ctypelist"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </div>
             </el-col>
             <el-col :span="18">
-            <div class="chartTitle">概念图谱</div>
+              <div style="margin: 0px 20px;">
+                <el-input v-model="inputTxt" placeholder="请输入内容">
+                  <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+              </div>
             </el-col>
           </el-row>
-          </div>
-        </div>
         </el-col>
       </el-row>
-      </div>
     </div>
+    <div class="home-echarts">
+      <el-row style="height: 100%;">
+        <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
+          <div id="tree" style="width: 500px; height: 500px;"></div>
+          <!-- <div id="chart">
+            <term style="width: 100%;" :info="info"></term>
+          </div> -->
+        </el-col>
+        <el-col :span="12" style=" height: 100%; margin-top:10px;">
+          <div class="rightchart">
+            <el-row style="height: 100%;">
+              <el-col :span="6">
+                <div style="margin-left: 10px;">
+                  <el-table :data="tableData3" border :header-cell-style="headerStyle">
+                    <el-table-column label='语义标签' header-align="center">
+                      <el-table-column prop="name"></el-table-column>
+                      <el-table-column prop="num" align="center">
+                        <template slot-scope="scope">
+                          <div class="semantic-tags">{{ scope.row.num }}</div>
+                        </template>
+                      </el-table-column>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </el-col>
+              <el-col :span="18">
+                <div class="piecharts" style="margin: 0px 20px;">
+                  <el-table :data="termstable" border :header-cell-style="tableHeaderStyle">
+                    <el-table-column prop="hospital" label="临床术语中文" align="center"></el-table-column>
+                    <el-table-column prop="dept" label="英文同义词" align="center"></el-table-column>
+                    <el-table-column prop="applyName" label="英文标准" align="center"></el-table-column>
+                  </el-table>
+                </div>
+              </el-col>
+            </el-row>
+            <div class="bottomchart">
+              <el-row>
+                <el-col :span="8" style="border-right: 2px solid #EFF3F6;">
+                  <div class="synonym">
+                    <div class="chartTitle">同义词</div>
+                    <p>标准概念中文: {{chinese}}</p>
+                    <p>标准概念英文: {{english}}</p>
+                    <p>标准概念编码: {{code}}</p>
+                    <el-row>
+                      <el-col :span="12" v-for="(val,index) in similar" :key="index">
+                        <div class="similar">
+                          {{val}}
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div class="synonym">
+                    <div class="chartTitle">概念图谱</div>
+                    <div id="atlas" style="width: 400px; height: 400px;"></div>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 <script>
-// 引入基本模板
-let echarts = require("echarts/lib/echarts");
-// 引入柱状图组件
-require("echarts/lib/chart/line");
-require("echarts/lib/chart/pie");
-// 引入提示框和title组件
-require("echarts/lib/component/tooltip");
-require("echarts/lib/component/title");
-require("echarts/lib/component/legend");
-import {common} from 'api/index.js';
+import echarts from 'echarts'
+import * as ECHART from '../../base/js/echarts.js'
+import Term from "../../components/term";
 export default {
   data() {
     return {
-      allData:{},
-      loading:true,
-      semanticTags:{},
-      termstable:[
+      allData: {},
+      loading: true,
+      semanticTags: {},
+      info: {
+        col1: [
+          {
+            conceptId: 1,
+            conceptName: "COPD"
+          }
+        ],
+        col2: [
+          {
+            conceptId: 62950007,
+            conceptName: "Encephalomyelitis",
+            parentNode: [1]
+          },
+          {
+            conceptId: 127341005,
+            conceptName: "Acutenervous",
+            parentNode: [1]
+          },
+          {
+            conceptId: 6118003,
+            conceptName: "Demyelinating",
+            parentNode: [1]
+          },
+          {
+            conceptId: 611800344,
+            conceptName: "nervoussystem",
+            parentNode: [1]
+          }
+        ],
+        col3: [
+          {
+            conceptId: 83942000,
+            conceptName: "Acute",
+            parentNode: [62950007, 127341005, 6118003]
+          }
+        ],
+        col4: [
+          {
+            conceptId: 182961000119101,
+            conceptName: "Acutedisseminated",
+            parentNode: [83942000, 1]
+          }
+        ]
+      },
+      termstable: [
         {
           hospital: "87201",
           dept: "同义词",
-          applyName:'个',
-        },{
-          hospital: "87201",
-          dept: "同义词",
-          applyName:'个',
-        },{
-          hospital: "87201",
-          dept: "同义词",
-          applyName:'个',
-        },{
-          hospital: "87201",
-          dept: "同义词",
-          applyName:'个',
+          applyName: "个"
         },
+        {
+          hospital: "87201",
+          dept: "同义词",
+          applyName: "个"
+        },
+        {
+          hospital: "87201",
+          dept: "同义词",
+          applyName: "个"
+        },
+        {
+          hospital: "87201",
+          dept: "同义词",
+          applyName: "个"
+        }
       ],
-      tableData3:[
+      tableData3: [
         {
           name: "病患",
-          num: "12",
+          num: "12"
         },
         {
           name: "病患",
-          num: "12",
+          num: "12"
         },
         {
           name: "病患",
-          num: "12",
+          num: "12"
         },
         {
           name: "病患",
-          num: "12",
-        },
+          num: "12"
+        }
       ],
-      ctypelist:[
+      ctypelist: [
         {
-          name:'模糊匹配（英文）',
-          id:2
+          name: "模糊匹配（英文）",
+          id: 2
         },
         {
-          name:'模糊匹配（中文）',
-          id:3
-        },
+          name: "模糊匹配（中文）",
+          id: 3
+        }
       ],
-      inputTxt:'',
-      ctype:'',
+      inputTxt: "",
+      ctype: "",
+      chinese: '',
+      english: '',
+      code: '',
+      similar: ['这是近义词','近义词','近义词'],
+      treedata: {}
     };
   },
   methods: {
-    getIndex(){
-
+    getIndex() {
+      ECHART.setInitAtlas('atlas')
     },
+    getTree(){
+      this.treedata = {
+        name: 'COPD',
+        children: [
+          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
+          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
+          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
+          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
+          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true}
+        ]
+      }
+      let option = {
+        series: [
+          {
+            type: "tree",
+            data: this.treedata,
+            top: "10%",
+            left: "20%",
+            bottom: "10%",
+            right: "20%",
+            symbolSize: 7,
+            label: {
+              normal: {
+                position: "left",
+                verticalAlign: "middle",
+                align: "right",
+                fontSize: 13,
+                color: '#FFA65F'
+              }
+            },
+            leaves: {
+              label: {
+                normal: {
+                  position: "right",
+                  
+                  verticalAlign: "middle",
+                  align: "left"
+                }
+              }
+            }
+          }
+        ]
+      }
+      // ECHART.setInitTree('tree', this.treedata)
+      let dom = echarts.init(document.getElementById('tree'));
+      dom.setOption(option);
+      dom.resize();
+    },
+    headerStyle(param){
+      if (param.rowIndex == '1') {
+        return { display: 'none' }
+      } else if (param.rowIndex == '0') {
+        return { background: '#DDE3FA'}
+      }
+    },
+    tableHeaderStyle(param){
+      if (param.rowIndex == '0') {
+        return { background: '#5473E8', color: '#fff'}
+      }
+    }
   },
-  created() {
-    // this.drawLine();
-    // this.drawPie();
-    this.getIndex()
+  mounted() {
+    this.getIndex();
+    this.getTree();
+  },
+  components: {
+    Term
   }
 };
 </script>
