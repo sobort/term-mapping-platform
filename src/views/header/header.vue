@@ -6,27 +6,32 @@
         <b>术语智能一体化平台</b>
       </p>
     </div>
-    <div class="exit">
+    <div class="exit" @click="exit">
       退出
       <i class="iconfont el-icon-biorights"></i>
     </div>
     <div class="right">
       <i class="iconfont el-icon-biouserinfo" style="font-size:26px;"></i>
-      <span style="margin-right: 20px;">user</span>
+      <span style="margin-right: 20px;">{{userName}}</span>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'Vuex'
 export default {
   data() {
     return {};
   },
   methods: {
     exit() {
-      this.$store.commit("resetState");
       this.$router.push("/");
-    }
-  }
+    },
+  },
+  computed: {
+    ...mapGetters(['userName'])
+  },
+  mounted(){
+  },
 };
 </script>
 <style lang="less" scoped>

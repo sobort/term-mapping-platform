@@ -146,7 +146,7 @@ export default {
       let innerHeight = $("#inner").height();
       let canvas = document.getElementById("can");
 
-      canvas.width = Object.keys(this.info).length * 180;
+      canvas.width = Object.keys(this.info).length * 360;
       canvas.height = innerHeight;
 
       const context = canvas.getContext("2d");
@@ -188,7 +188,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: -1;
+    /* z-index: -1; */
   }
   .inner {
     width: auto;

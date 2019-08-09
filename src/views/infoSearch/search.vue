@@ -73,8 +73,8 @@
             </el-col>
             <el-col :span="18">
               <div style="margin: 0px 20px;">
-                <el-input v-model="inputTxt" placeholder="请输入内容">
-                  <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-input v-model="searchText" placeholder="请输入内容">
+                  <el-button slot="append" icon="el-icon-search" @click="searchAllList"></el-button>
                 </el-input>
               </div>
             </el-col>
@@ -85,22 +85,26 @@
     <div class="home-echarts">
       <el-row style="height: 100%;">
         <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
-          <!-- <div id="tree" style="width: 500px; height: 500px;"></div> -->
-          <div id="chart">
+          <div id="tree" style="width: 600px; height: 500px;"></div>
+          <!-- <div id="chart">
             <term style="width: 100%;" :info="info"></term>
-          </div>
+          </div> -->
         </el-col>
         <el-col :span="12" style=" height: 100%; margin-top:10px;">
           <div class="rightchart">
             <el-row style="height: 100%;">
               <el-col :span="6">
                 <div style="margin-left: 10px;">
-                  <el-table :data="tableData3" border :header-cell-style="headerStyle">
+                  <el-table class="tag-table" 
+                    :data="tagDataList" border 
+                    :header-cell-style="headerStyle"
+                    max-height="300"
+                    @row-click="tagClickList">
                     <el-table-column label='语义标签' header-align="center">
-                      <el-table-column prop="name"></el-table-column>
-                      <el-table-column prop="num" align="center">
+                      <el-table-column prop="tagName"></el-table-column>
+                      <el-table-column prop="tagNum" align="center">
                         <template slot-scope="scope">
-                          <div class="semantic-tags">{{ scope.row.num }}</div>
+                          <div class="semantic-tags">{{ scope.row.tagNum }}</div>
                         </template>
                       </el-table-column>
                     </el-table-column>
@@ -109,10 +113,10 @@
               </el-col>
               <el-col :span="18">
                 <div class="piecharts" style="margin: 0px 20px;">
-                  <el-table :data="termstable" border :header-cell-style="tableHeaderStyle">
-                    <el-table-column prop="hospital" label="临床术语中文" align="center"></el-table-column>
-                    <el-table-column prop="dept" label="英文同义词" align="center"></el-table-column>
-                    <el-table-column prop="applyName" label="英文标准" align="center"></el-table-column>
+                  <el-table class="tag-table" :data="searchDataList" border :header-cell-style="tableHeaderStyle" max-height="300">
+                    <el-table-column prop="name_cn" label="临床术语中文" align="center"></el-table-column>
+                    <el-table-column prop="name_en" label="英文同义词" align="center"></el-table-column>
+                    <el-table-column prop="fsn" label="英文标准" align="center"></el-table-column>
                   </el-table>
                 </div>
               </el-col>
@@ -149,8 +153,9 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'Vuex'
 import echarts from 'echarts'
-import Axios from "../../base/js/axios";
+import {common} from 'api/index.js';
 import * as ECHART from '../../base/js/echarts.js'
 import Term from "../../components/term";
 export default {
@@ -203,58 +208,20 @@ export default {
           }
         ]
       },
-      termstable: [
-        {
-          hospital: "87201",
-          dept: "同义词",
-          applyName: "个"
-        },
-        {
-          hospital: "87201",
-          dept: "同义词",
-          applyName: "个"
-        },
-        {
-          hospital: "87201",
-          dept: "同义词",
-          applyName: "个"
-        },
-        {
-          hospital: "87201",
-          dept: "同义词",
-          applyName: "个"
-        }
-      ],
-      tableData3: [
-        {
-          name: "病患",
-          num: "12"
-        },
-        {
-          name: "病患",
-          num: "12"
-        },
-        {
-          name: "病患",
-          num: "12"
-        },
-        {
-          name: "病患",
-          num: "12"
-        }
-      ],
+      searchDataList: [],
+      tagDataList: [],
       ctypelist: [
+        {
+          name: "模糊匹配（中文）",
+          id: 1
+        },
         {
           name: "模糊匹配（英文）",
           id: 2
-        },
-        {
-          name: "模糊匹配（中文）",
-          id: 3
         }
       ],
-      inputTxt: "",
-      ctype: "",
+      searchText: "",
+      ctype: '',
       chinese: '',
       english: '',
       code: '',
@@ -263,26 +230,80 @@ export default {
       tree: []
     };
   },
+  computed: {
+    ...mapGetters(['userId'])
+  },
   methods: {
     getIndex() {
+      common.getSearchList(this.userId).then(res => {
+        this.tagDataList = res.tagList
+        this.searchDataList = res.searchList
+      })
       ECHART.setInitAtlas('atlas')
     },
     getTree(){
-      Axios.post('/getTreeList.php').then(res => {
-        this.tree = res.data
+      common.treeList().then(res => {
+        this.treedata = res
+        this.treedata.children.forEach(n => {
+          n.collapsed = true
+        })
+        let dom = echarts.init(document.getElementById('tree'))
+        dom.on('click', this.clickTree)
+        dom.setOption({
+          series: [
+            {
+              type: "tree",
+              data: [this.treedata],
+              top: "10%",
+              left: "20%",
+              bottom: "2%",
+              right: "40%",
+              symbolSize: 7,
+              label: {
+                normal: {
+                  position: "left",
+                  verticalAlign: "middle",
+                  align: "right",
+                  fontSize: 13,
+                  color: '#FFA65F'
+                }
+              },
+              leaves: {
+                label: {
+                  normal: {
+                    position: "right",
+                    verticalAlign: "middle",
+                    align: "left"
+                  }
+                }
+              }
+            }
+          ]
+        });
+        dom.resize();
       })
-      this.treedata = {
-        name: 'COPD',
-        children: [
-          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
-          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
-          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
-          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true},
-          {name: '父类临床术语', children: [{name: '子类'}], collapsed: true}
-        ]
-      }
-      ECHART.setInitTree('tree', this.treedata)
+      // ECHART.setInitTree('tree', this.treedata)
     },
+    clickTree(param){
+      console.log(param)
+      let obj = {
+        type: 1,
+        keyword: '',
+        id: param.data.id,
+        tag: '',
+        uid: this.userId
+      }
+      common.searchAll(obj).then(res => {
+        console.log(res)
+        if(res.code === 200){
+          this.searchDataList = res.searchList
+          this.tagDataList = res.tagList
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
+    },
+    // 语义标签表头样式
     headerStyle(param){
       if (param.rowIndex == '1') {
         return { display: 'none' }
@@ -290,15 +311,44 @@ export default {
         return { background: '#DDE3FA'}
       }
     },
+
     tableHeaderStyle(param){
       if (param.rowIndex == '0') {
         return { background: '#5473E8', color: '#fff'}
       }
+    },
+    // 搜索按钮
+    searchAllList(){
+      if(this.searchText && this.ctype){
+        let obj = {
+          type: this.ctype,
+          keyword: this.searchText,
+          id: '',
+          tag: '',
+          uid: this.userId
+        }
+        common.searchAll(obj).then(res => {
+          if(res.code === 200){
+            this.searchDataList = res.searchList
+            this.tagDataList = res.tagList
+          } else {
+            this.$message.error(res.msg);
+          }
+        })
+      } else {
+        this.getIndex()
+      }
+    },
+    tagClickList(param){
+      console.log(param)
     }
   },
   mounted() {
     this.getIndex();
     this.getTree();
+  },
+  computed: {
+    ...mapGetters(['userId'])
   },
   components: {
     Term

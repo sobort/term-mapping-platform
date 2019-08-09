@@ -20,8 +20,8 @@ Axios.interceptors.response.use(
   }
 );
 // 全局访问请求对象
-// window.$ajax = Axios;
-Axios.defaults.baseURL = "http://47.104.241.186/huxi";
-Axios.defaults.uploadURL = "http://47.104.241.186/huxi";
-Axios.default.timeout = 3000;
-export default Axios;
+window.$ajax = Axios;
+// Axios.defaults.baseURL = "http://47.104.241.186/huxi";
+// Axios.defaults.uploadURL = "http://47.104.241.186/huxi";
+// Axios.default.timeout = 3000;
+// export default Axios;
