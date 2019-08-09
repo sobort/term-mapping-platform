@@ -13,6 +13,7 @@
         "element-ui": "^2.4.8",
         "highcharts": "^7.1.2",
         "iview": "^2.4.0",
+        "jquery": "^3.4.1",
         "less-loader": "^5.0.0",
         "vue": "^2.5.2",
         "vue-d3": "^0.1.0",

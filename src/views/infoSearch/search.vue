@@ -85,10 +85,10 @@
     <div class="home-echarts">
       <el-row style="height: 100%;">
         <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
-          <div id="tree" style="width: 500px; height: 500px;"></div>
-          <!-- <div id="chart">
+          <!-- <div id="tree" style="width: 500px; height: 500px;"></div> -->
+          <div id="chart">
             <term style="width: 100%;" :info="info"></term>
-          </div> -->
+          </div>
         </el-col>
         <el-col :span="12" style=" height: 100%; margin-top:10px;">
           <div class="rightchart">
@@ -150,6 +150,7 @@
 </template>
 <script>
 import echarts from 'echarts'
+import Axios from "../../base/js/axios";
 import * as ECHART from '../../base/js/echarts.js'
 import Term from "../../components/term";
 export default {
@@ -258,7 +259,8 @@ export default {
       english: '',
       code: '',
       similar: ['这是近义词','近义词','近义词'],
-      treedata: {}
+      treedata: {},
+      tree: []
     };
   },
   methods: {
@@ -266,6 +268,9 @@ export default {
       ECHART.setInitAtlas('atlas')
     },
     getTree(){
+      Axios.post('/getTreeList.php').then(res => {
+        this.tree = res.data
+      })
       this.treedata = {
         name: 'COPD',
         children: [
@@ -276,42 +281,7 @@ export default {
           {name: '父类临床术语', children: [{name: '子类'}], collapsed: true}
         ]
       }
-      let option = {
-        series: [
-          {
-            type: "tree",
-            data: this.treedata,
-            top: "10%",
-            left: "20%",
-            bottom: "10%",
-            right: "20%",
-            symbolSize: 7,
-            label: {
-              normal: {
-                position: "left",
-                verticalAlign: "middle",
-                align: "right",
-                fontSize: 13,
-                color: '#FFA65F'
-              }
-            },
-            leaves: {
-              label: {
-                normal: {
-                  position: "right",
-                  
-                  verticalAlign: "middle",
-                  align: "left"
-                }
-              }
-            }
-          }
-        ]
-      }
-      // ECHART.setInitTree('tree', this.treedata)
-      let dom = echarts.init(document.getElementById('tree'));
-      dom.setOption(option);
-      dom.resize();
+      ECHART.setInitTree('tree', this.treedata)
     },
     headerStyle(param){
       if (param.rowIndex == '1') {
