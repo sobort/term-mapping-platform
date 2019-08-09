@@ -23,5 +23,10 @@ export const common = {
       .then(res => {
         return Promise.resolve(res.data)
       })
-  }
+  },
+  index(action,uid,id) {
+    return $ajax.get(apiUrl.apiUrl + 'index.php?action=' + action + '&uid=' + uid + '&id=' + id).then(function (res) {
+      return Promise.resolve(res.data)
+    })
+  },
 };

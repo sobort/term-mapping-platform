@@ -1,7 +1,7 @@
 // 引入服务器请求模块
 import Axios from "axios";
 
-Axios.defaults.withCredentials = true;
+Axios.defaults.withCredentials = false;
 // ajax 请求拦截
 Axios.interceptors.request.use(config => {
   const token = sessionStorage.getItem("token");

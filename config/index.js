@@ -13,7 +13,7 @@ module.exports = {
         proxyTable: {
             '/': {
                 // target: 'http://172.30.1.160:8091',
-                target: 'http://42.123.125.101:8091',
+                target: 'http://47.104.241.186/huxi/',
                 // target: 'http://172.30.2.113:8091',
                 changeOrigin: true,
             }
