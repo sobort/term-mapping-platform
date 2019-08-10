@@ -1,5 +1,5 @@
 let echarts = require("echarts/lib/echarts");
-
+import { common } from "api/index.js";
 require("echarts/lib/chart/bar");
 require("echarts/lib/chart/line");
 require("echarts/lib/chart/pie");
@@ -102,44 +102,26 @@ export function setInitTree(id, data) {
   dom.resize();
 }
 
-export function setmaptree(rawData,id){
+export function setmaptree(rawData,id,userId){
 let myChart = echarts.init(document.getElementById(id))
-function convert(source, target, basePath) {
-  for (var key in source) {
-      var path = basePath ? (basePath + '.' + key) : key;
-      if (key.match(/^\$/)) {
-
-      }
-      else {
-          target.children = target.children || [];
-          var child = {
-              name: path
-          };
-          target.children.push(child);
-          convert(source[key], child, path);
-      }
-  }
-
-  if (!target.children) {
-      target.value = source.$count || 1;
-  }
-  else {
-      target.children.push({
-          name: basePath,
-          value: source.$count
-      });
-  }
-}
-var data = [];
-//convert(rawData, data, '');
-//console.log(data)
-myChart.setOption({
+console.log(rawData)
+var option={
   title: {
       // text: 'ECharts 配置项查询分布',
       // subtext: '2016/04',
       left: 'leafDepth'
   },
-  tooltip: {},
+  tooltip: {
+    formatter: function (info) {
+      var value = info.value;
+      return [
+        '<div class="tooltip-title">' + info.name + '</div>',
+        '标准术语数量: &nbsp;&nbsp;' + value[0] + '<br>',
+        '同义词数量: &nbsp;&nbsp;' + value[1] + '<br>',
+        '医院数量: &nbsp;&nbsp;' + value[2] + '<br>',
+    ].join('');
+  }
+  },
   series: [{
       name: 'option',
       type: 'treemap',
@@ -181,6 +163,61 @@ myChart.setOption({
           }
       ]
   }]
+}
+
+myChart.setOption(option);
+myChart.on('click',function (params) {
+  console.log(rawData);
+        var termid="";
+        for(var i=0;i<rawData.length;i++){
+          if(rawData[i].name==params.name){
+            console.log(rawData[i].id);
+            termid=rawData[i].id;
+          }
+        }
+      
+      console.log(termid);
+      let obj={
+        uid:userId,
+        id:termid,
+        action:'getIndexInfo'
+      }
+      initChart(obj,1)
+});
+function initChart(obj,type){
+  common.index(obj.action,obj.uid,obj.id).then((res)=>{
+  console.log(res)
+  if(res.code==200){
+      var newList = res.list.map(item=> {
+        let arr=[];
+        let child=[];
+        arr.push(Number(item.num_st));
+        arr.push(Number(item.num_sy));
+        arr.push(Number(item.num_hx));
+        if(item.children){
+          child=item.children
+        }
+        return {
+        name: item.name_cn,
+        value:arr,
+        id:item.id,
+        children:child,
+      }            
+    });
+    console.log(newList)
+    
+    var termid="";
+        for(var i=0;i<rawData.length;i++){
+          if(rawData[i].id==obj.id){
+            console.log(rawData[i].id);
+            rawData[i].children=newList;
+            console.log(rawData);
+            myChart.setOption(option)
+          }
+        }
+  }else{
+  }
 })
+}
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="home-display">
+  <div class="home-display" style="max-height:700px;overflow:hidden;">
     <div class="tab" style="border-bottom:1px solid #DFE3E9">
       <el-row>
         <el-col :span="12">
@@ -32,7 +32,7 @@
     </div>
     <el-row>
       <el-col :span="18" style="padding:0 14px;">
-        <el-col :span="8" style="padding:0 14px;" v-for="(item,index) in lineList"
+        <el-col :span="8" style="padding:0 14px;margin-bottom:20px;" v-for="(item,index) in lineList"
                 :key="index">
           <div class="home-content" style="">
             <div>
@@ -44,7 +44,7 @@
         </el-col>
         <div id="treeMap" style="width: 755px; height: 490px; margin:20px auto;"></div>
       </el-col>
-      <el-col :span="6" style="padding:0 20px;max-height:700px;overflow-y:scroll;border-left: 1px solid #dfe3e9;">
+      <el-col :span="6" style="padding:0 20px 20px 20px;;max-height:700px;overflow-y:scroll;border-left: 1px solid #dfe3e9;">
         <div >
           <!--<div class="mode">
             <div style="color:#FFC859;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>诊断</div>
@@ -105,7 +105,7 @@
   </div>
 </template>
 <script>
-  //import rawData from '../../base/json/data.json'
+  import { mapGetters } from 'Vuex'
   import * as ECHART from '../../base/js/echarts.js'
   import {common} from 'api/index.js';
   export default {
@@ -157,12 +157,15 @@
     methods: {
       getIndexInfo(){
           console.log(this.$store.state.userId)
-        let obj={
-          uid:this.$store.state.userId,
-          id:"46",
-          action:'getIndexInfo'
-        }
-        common.index(obj.action,obj.uid,obj.id).then((res)=>{
+          let obj={
+            uid:this.userId,
+            id:"1",
+            action:'getIndexInfo'
+          }
+          this.initChart(obj,0);
+      },
+      initChart(obj,type){
+          common.index(obj.action,obj.uid,obj.id).then((res)=>{
           console.log(res)
           if(res.code==200){
             this.lineList[0].number=res.num_hx;
@@ -175,31 +178,31 @@
                 arr.push(Number(item.num_st));
                 arr.push(Number(item.num_sy));
                 arr.push(Number(item.num_hx));
+                let child=[];
+                if(item.children){
+                  child=item.children
+                }
                 return {
                 name: item.name_cn,
                 value:arr,
                 id:item.id,
-                children:[{value:arr,name: item.name_cn,id:item.id,children:[{value:arr,name: item.name_cn,id:item.id,children:[]},{value:arr,name: item.name_cn,id:item.id,children:[]}]},
-                {value:arr,name: item.name_cn,id:item.id,},
-                {value:arr,name: item.name_cn,id:item.id,},
-                {value:arr,name: item.name_cn,id:item.id,},]
+                children:child,
               }           
             });
-          
             console.log(newList)
-            ECHART.setmaptree(newList,'treeMap')
+              ECHART.setmaptree(newList,'treeMap',this.userId)
           }else{
             this.$message.error(res.msg)
           }
         })
       },
-      initChart(){
-
-      },
       searchAllList(){
         this.$router.push("/infoSearch/search");
       }
-    }
+    },
+    computed: {
+    ...mapGetters(['userId'])
+  },
   };
 </script>
 <style lang="less" scoped>
