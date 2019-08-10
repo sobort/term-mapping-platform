@@ -102,89 +102,85 @@ export function setInitTree(id, data) {
   dom.resize();
 }
 
-export function setmaptree(diskData,id){
-  function colorMappingChange(value) {
-    console.log(value);
-    var levelOption = getLevelOption(value);
-    chart.setOption({
-      series: [{
-        levels: levelOption
-      }]
-    });
+export function setmaptree(rawData,id){
+let myChart = echarts.init(document.getElementById(id))
+function convert(source, target, basePath) {
+  for (var key in source) {
+      var path = basePath ? (basePath + '.' + key) : key;
+      if (key.match(/^\$/)) {
+
+      }
+      else {
+          target.children = target.children || [];
+          var child = {
+              name: path
+          };
+          target.children.push(child);
+          convert(source[key], child, path);
+      }
   }
 
-var formatUtil = echarts.format;
-
-  function getLevelOption() {
-    return [
-      {
-        itemStyle: {
-          normal: {
-            borderWidth: 0,
-            gapWidth: 5
-          }
-        }
-      },
-      {
-        itemStyle: {
-          normal: {
-            gapWidth: 1
-          }
-        }
-      },
-      {
-        colorSaturation: [0.35, 0.5],
-        itemStyle: {
-          normal: {
-            gapWidth: 1,
-            borderColorSaturation: 0.6
-          }
-        }
-      }
-    ];
+  if (!target.children) {
+      target.value = source.$count || 1;
   }
-  let myChart = echarts.init(document.getElementById(id))
-  myChart.setOption({
-
-    title: {
-      text: 'Disk Usage',
-      left: 'center'
-    },
-
-    tooltip: {
-      formatter: function (info) {
-        /*var value = info.value;
-        var treePathInfo = info.treePathInfo;
-        var treePath = [];
-
-        for (var i = 1; i < treePathInfo.length; i++) {
-          treePath.push(treePathInfo[i].name);
-        }
-
-        return [
-          '<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
-          'Disk Usage: ' + formatUtil.addCommas(value) + ' KB',
-        ].join('');*/
-      }
-    },
-
-    series: [
-      {
-        name:'Disk Usage',
-        type:'treemap',
-        visibleMin: 300,
-        label: {
-          show: true,
-          formatter: '{b}'
-        },
-        itemStyle: {
-          normal: {
-            borderColor: '#fff'
+  else {
+      target.children.push({
+          name: basePath,
+          value: source.$count
+      });
+  }
+}
+var data = [];
+//convert(rawData, data, '');
+//console.log(data)
+myChart.setOption({
+  title: {
+      // text: 'ECharts 配置项查询分布',
+      // subtext: '2016/04',
+      left: 'leafDepth'
+  },
+  tooltip: {},
+  series: [{
+      name: 'option',
+      type: 'treemap',
+      visibleMin: 300,
+      //data: data.children,
+      data:rawData,
+      leafDepth: 2,
+      levels: [
+          {
+              itemStyle: {
+                  normal: {
+                      borderColor: '#555',
+                      borderWidth: 4,
+                      gapWidth: 4
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.6],
+              itemStyle: {
+                  normal: {
+                      borderColorSaturation: 0.7,
+                      gapWidth: 2,
+                      borderWidth: 2
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.5],
+              itemStyle: {
+                  normal: {
+                      borderColorSaturation: 0.6,
+                      gapWidth: 1
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.5]
           }
-        },
-        levels: getLevelOption(),
-        data: diskData
-      }
-    ]
-  });
+      ]
+  }]
+})
+
 }

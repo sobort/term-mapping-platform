@@ -1,27 +1,37 @@
 <template>
   <div class="home-display">
-    <div class="home-title">
+    <div class="tab" style="border-bottom:1px solid #DFE3E9">
       <el-row>
-        <el-col :span="10">
-          <span style="margin-left: 30px; font-size: 16px;">术语展示</span>
+        <el-col :span="12">
+          <span style="margin-left: 30px;">术语展示</span>
         </el-col>
-        <el-col :span="14">
-          <el-select v-model="displayMenu" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <el-input placeholder="请输入内容" v-model="homeValue" style="width: 70%">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
+        <el-col :span="12">
+          <el-row>
+            <el-col :span="6">
+              <div style="margin-left: 10px;">
+                <el-select v-model="ctype" placeholder="模糊匹配">
+                  <el-option
+                    v-for="item in ctypelist"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </div>
+            </el-col>
+            <el-col :span="18">
+              <div style="margin: 0px 20px;">
+                <el-input v-model="searchText" placeholder="请输入内容">
+                  <el-button slot="append" icon="el-icon-search" @click="searchAllList"></el-button>
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </div>
     <el-row>
-      <el-col :span="18" style="border-right: 1px solid #dfe3e9;padding:0 14px;">
+      <el-col :span="18" style="padding:0 14px;">
         <el-col :span="8" style="padding:0 14px;" v-for="(item,index) in lineList"
                 :key="index">
           <div class="home-content" style="">
@@ -34,7 +44,7 @@
         </el-col>
         <div id="treeMap" style="width: 755px; height: 490px; margin:20px auto;"></div>
       </el-col>
-      <el-col :span="6" style="padding:0 28px;">
+      <el-col :span="6" style="padding:0 20px;max-height:700px;overflow-y:scroll;border-left: 1px solid #dfe3e9;">
         <div >
           <!--<div class="mode">
             <div style="color:#FFC859;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>诊断</div>
@@ -95,22 +105,24 @@
   </div>
 </template>
 <script>
-  //import rawData from '../../base/json/disk.tree.json'
+  //import rawData from '../../base/json/data.json'
   import * as ECHART from '../../base/js/echarts.js'
   import {common} from 'api/index.js';
   export default {
     data() {
       return {
-        options:[
-          {
-            name:'模糊匹配（英文）',
-            id:2
-          },
-          {
-            name:'模糊匹配（中文）',
-            id:3
-          },
-        ],
+        ctypelist: [
+        {
+          name: "模糊匹配（中文）",
+          id: 1
+        },
+        {
+          name: "模糊匹配（英文）",
+          id: 2
+        }
+      ],
+      searchText: "",
+      ctype: '',
         lineList: [
           {
             number: "",
@@ -139,7 +151,7 @@
       };
     },
     mounted(){
-      this.initChart();
+      //this.initChart();
       this.getIndexInfo();
     },
     methods: {
@@ -157,15 +169,23 @@
             this.lineList[1].number=res.num_st;
             this.lineList[2].number=res.num_sy;
             this.list=res.list
-            //this.$store.state.userId=res.data.id;
-            //console.log(rawData);
             console.log(this.list);
-            var newList = this.list.map(item=> {
-              return {
-        name: item.name_cn,
-        value:item.num_st
-    }           
+              var newList = this.list.map(item=> {
+                let arr=[];
+                arr.push(Number(item.num_st));
+                arr.push(Number(item.num_sy));
+                arr.push(Number(item.num_hx));
+                return {
+                name: item.name_cn,
+                value:arr,
+                id:item.id,
+                children:[{value:arr,name: item.name_cn,id:item.id,children:[{value:arr,name: item.name_cn,id:item.id,children:[]},{value:arr,name: item.name_cn,id:item.id,children:[]}]},
+                {value:arr,name: item.name_cn,id:item.id,},
+                {value:arr,name: item.name_cn,id:item.id,},
+                {value:arr,name: item.name_cn,id:item.id,},]
+              }           
             });
+          
             console.log(newList)
             ECHART.setmaptree(newList,'treeMap')
           }else{
@@ -176,6 +196,9 @@
       initChart(){
 
       },
+      searchAllList(){
+        this.$router.push("/infoSearch/search");
+      }
     }
   };
 </script>
@@ -183,11 +206,11 @@
   .home-display {
     height: 100%;
   }
-  .home-title {
-    height: 60px;
-    width: 100%;
-    line-height: 60px;
-    border-bottom: 1px solid #dfe3e9;
+  .tab {
+    height: 57px;
+    line-height: 57px;
+    background: #fff;
+    color: #000;
   }
   .home-content{
     height: 100px;
