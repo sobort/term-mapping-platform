@@ -164,50 +164,7 @@ export default {
       allData: {},
       loading: true,
       semanticTags: {},
-      info: {
-        col1: [
-          {
-            conceptId: 1,
-            conceptName: "COPD"
-          }
-        ],
-        col2: [
-          {
-            conceptId: 62950007,
-            conceptName: "Encephalomyelitis",
-            parentNode: [1]
-          },
-          {
-            conceptId: 127341005,
-            conceptName: "Acutenervous",
-            parentNode: [1]
-          },
-          {
-            conceptId: 6118003,
-            conceptName: "Demyelinating",
-            parentNode: [1]
-          },
-          {
-            conceptId: 611800344,
-            conceptName: "nervoussystem",
-            parentNode: [1]
-          }
-        ],
-        col3: [
-          {
-            conceptId: 83942000,
-            conceptName: "Acute",
-            parentNode: [62950007, 127341005, 6118003]
-          }
-        ],
-        col4: [
-          {
-            conceptId: 182961000119101,
-            conceptName: "Acutedisseminated",
-            parentNode: [83942000, 1]
-          }
-        ]
-      },
+      info: {},
       searchDataList: [],
       tagDataList: [],
       ctypelist: [
@@ -225,7 +182,7 @@ export default {
       chinese: '',
       english: '',
       code: '',
-      similar: ['这是近义词','近义词','近义词'],
+      similar: [],
       treedata: {},
       tree: []
     };
@@ -244,6 +201,7 @@ export default {
     getTree(){
       common.treeList().then(res => {
         this.treedata = res
+        this.treedata.collapsed = false
         this.treedata.children.forEach(n => {
           n.collapsed = true
         })
@@ -276,7 +234,8 @@ export default {
                     align: "left"
                   }
                 }
-              }
+              },
+              expandAndCollapse: true,
             }
           ]
         });
@@ -285,7 +244,6 @@ export default {
       // ECHART.setInitTree('tree', this.treedata)
     },
     clickTree(param){
-      console.log(param)
       let obj = {
         type: 1,
         keyword: '',
@@ -293,15 +251,7 @@ export default {
         tag: '',
         uid: this.userId
       }
-      common.searchAll(obj).then(res => {
-        console.log(res)
-        if(res.code === 200){
-          this.searchDataList = res.searchList
-          this.tagDataList = res.tagList
-        } else {
-          this.$message.error(res.msg);
-        }
-      })
+      this.searchAll(obj)
     },
     // 语义标签表头样式
     headerStyle(param){
@@ -327,21 +277,35 @@ export default {
           tag: '',
           uid: this.userId
         }
-        common.searchAll(obj).then(res => {
-          if(res.code === 200){
-            this.searchDataList = res.searchList
-            this.tagDataList = res.tagList
-          } else {
-            this.$message.error(res.msg);
-          }
-        })
+        this.searchAll(obj)
       } else {
         this.getIndex()
       }
     },
     tagClickList(param){
       console.log(param)
-    }
+      let obj = {
+        type: 1,
+        keyword: '',
+        id: '',
+        tag: param.tagName,
+        uid: this.userId
+      }
+      this.searchAll(obj)
+    },
+    // 搜索接口调用
+    searchAll(obj){
+      common.searchAll(obj).then(res => {
+        console.log(res)
+        if(res.code === 200){
+          this.searchDataList = res.searchList
+          this.tagDataList = res.tagList
+          this.similar = res.syList
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
+    },
   },
   mounted() {
     this.getIndex();
