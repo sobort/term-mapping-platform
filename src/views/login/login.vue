@@ -176,6 +176,7 @@ export default {
         passwd: this.password
       };
       common.login(obj).then(res => {
+        console.log(res)
         if (res.code == 200) {
           this.getUserInfo(res.userinfo.username)
           this.getUserId(res.userinfo.uid)

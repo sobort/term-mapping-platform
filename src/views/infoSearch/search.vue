@@ -14,6 +14,7 @@
     height: 100%;
   }
   .bottomchart{
+    height: 100%;
     margin-top: 20px;
     border-top: 2px solid #EFF3F6;
     .synonym{
@@ -85,14 +86,18 @@
     <div class="home-echarts">
       <el-row style="height: 100%;">
         <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
-          <div id="tree" style="width: 600px; height: 500px;"></div>
-          <!-- <div id="chart">
+          <div style="margin: 20px;float: right;">
+            <el-button type="info" @click="changeTreeTable">树形图</el-button>
+            <el-button type="info" @click="changeDataTable">数据图</el-button>
+          </div>
+          <div id="tree" v-show="displayChart" style="width: 600px; height: 500px;"></div>
+          <div id="chart" v-show="!displayChart">
             <term style="width: 100%;" :info="info"></term>
-          </div> -->
+          </div>
         </el-col>
-        <el-col :span="12" style=" height: 100%; margin-top:10px;">
-          <div class="rightchart">
-            <el-row style="height: 100%;">
+        <el-col :span="12" style="height: 100%;">
+          <div class="rightchart" style="height: 100%;">
+            <el-row>
               <el-col :span="6">
                 <div style="margin-left: 10px;">
                   <el-table class="tag-table" 
@@ -122,8 +127,8 @@
               </el-col>
             </el-row>
             <div class="bottomchart">
-              <el-row>
-                <el-col :span="8" style="border-right: 2px solid #EFF3F6;">
+              <el-row style="height: 100%;">
+                <el-col :span="8" style="height: 100%;border-right: 2px solid #EFF3F6;">
                   <div class="synonym">
                     <div class="chartTitle">同义词</div>
                     <p>标准概念中文: {{chinese}}</p>
@@ -161,13 +166,11 @@ import Term from "../../components/term";
 export default {
   data() {
     return {
-      allData: {},
-      loading: true,
-      semanticTags: {},
+      displayChart: true, //显示图表
       info: {},
-      searchDataList: [],
-      tagDataList: [],
-      ctypelist: [
+      searchDataList: [], // 搜索列表数据
+      tagDataList: [], // 语义标签列表数据
+      ctypelist: [ // 匹配方式列表
         {
           name: "模糊匹配（中文）",
           id: 1
@@ -177,20 +180,20 @@ export default {
           id: 2
         }
       ],
-      searchText: "",
-      ctype: '',
-      chinese: '',
-      english: '',
-      code: '',
-      similar: [],
-      treedata: {},
-      tree: []
+      ctype: '', // 匹配方式
+      searchText: "", // 搜索内容
+      chinese: '', // 标准概念中文
+      english: '', // 标准概念英文
+      code: '', // 标准概念编码
+      similar: [], // 同义词列表
+      treedata: {}, // 树图数据
     };
   },
   computed: {
     ...mapGetters(['userId'])
   },
   methods: {
+    // 初始化语义标签和搜索列表
     getIndex() {
       common.getSearchList(this.userId).then(res => {
         this.tagDataList = res.tagList
@@ -198,6 +201,7 @@ export default {
       })
       ECHART.setInitAtlas('atlas')
     },
+    // 初始化树形图
     getTree(){
       common.treeList().then(res => {
         this.treedata = res
@@ -243,7 +247,7 @@ export default {
       })
       // ECHART.setInitTree('tree', this.treedata)
     },
-    clickTree(param){
+    clickTree(param){ // 树形图点击
       let obj = {
         type: 1,
         keyword: '',
@@ -261,7 +265,7 @@ export default {
         return { background: '#DDE3FA'}
       }
     },
-
+    // 搜索列表表头样式
     tableHeaderStyle(param){
       if (param.rowIndex == '0') {
         return { background: '#5473E8', color: '#fff'}
@@ -282,8 +286,20 @@ export default {
         this.getIndex()
       }
     },
+    // 树形图切换
+    changeTreeTable(){
+      this.displayChart = true
+    },
+    // 数据图切换
+    changeDataTable(){
+      if(JSON.stringify(this.info) !== "{}"){
+        this.displayChart = false
+      } else {
+        this.$message.error("请选择树形图节点")
+      }
+    },
+    // 语义标签行点击事件
     tagClickList(param){
-      console.log(param)
       let obj = {
         type: 1,
         keyword: '',
@@ -296,11 +312,18 @@ export default {
     // 搜索接口调用
     searchAll(obj){
       common.searchAll(obj).then(res => {
-        console.log(res)
         if(res.code === 200){
           this.searchDataList = res.searchList
           this.tagDataList = res.tagList
           this.similar = res.syList
+          if(res.rectangleList){
+            let obj = {}
+            obj = res.rectangleList
+            delete obj.colnum
+            delete obj.conceptId
+            delete obj.conceptName
+            this.info = obj
+          }
         } else {
           this.$message.error(res.msg);
         }
@@ -319,4 +342,3 @@ export default {
   }
 };
 </script>
-

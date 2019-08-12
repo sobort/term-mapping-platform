@@ -24,6 +24,18 @@ export const common = {
         return Promise.resolve(res.data)
       })
   },
+  editLog(obj){
+    return $ajax.post(apiUrl.apiUrl + 'index.php?action=updateOp&id=' + obj.id + '&name=' + obj.name + '&uid=' + obj.uid)
+      .then(res => {
+        return Promise.resolve(res.data)
+      })
+  },
+  getEditLog(obj){
+    return $ajax.post(apiUrl.apiUrl + 'index.php?action=uploadLog&id=' + obj.id + '&uid=' + obj.uid)
+      .then(res => {
+        return Promise.resolve(res.data)
+      })
+  },
   index(action,uid,id) {
     return $ajax.get(apiUrl.apiUrl + 'index.php?action=' + action + '&uid=' + uid + '&id=' + id).then(function (res) {
       return Promise.resolve(res.data)
