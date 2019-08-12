@@ -5,28 +5,6 @@
         <el-col :span="12">
           <span style="margin-left: 30px;">术语展示</span>
         </el-col>
-        <el-col :span="12">
-          <el-row>
-            <el-col :span="6">
-              <div style="margin-left: 10px;">
-                <el-select v-model="ctype" placeholder="模糊匹配">
-                  <el-option
-                    v-for="item in ctypelist"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </div>
-            </el-col>
-            <el-col :span="18">
-              <div style="margin: 0px 20px;">
-                <el-input v-model="searchText" placeholder="请输入内容">
-                  <el-button slot="append" icon="el-icon-search" @click="searchAllList"></el-button>
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
         </el-col>
       </el-row>
     </div>
@@ -45,7 +23,7 @@
         <div id="treeMap" style="width: 755px; height: 490px; margin:20px auto;"></div>
       </el-col>
       <el-col :span="6" style="padding:0 20px 20px 20px;;max-height:700px;overflow-y:scroll;border-left: 1px solid #dfe3e9;">
-        <div >
+        <div style="margin-bottom:40px;">
           <!--<div class="mode">
             <div style="color:#FFC859;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>诊断</div>
             <div class="leftMode">
