@@ -166,10 +166,7 @@ var option={
 }
 
 myChart.setOption(option);
-let isClick=true;
 myChart.on('click',function (params) {
-
-  console.log(params)
 if(params.data){
   if(!params.data.children){
       var termid=params.data.id;
@@ -181,9 +178,7 @@ if(params.data){
       }
       initChart(obj,termid)
   }
-}
-  console.log(rawData);       
-      
+}             
 });
 function initChart(obj,termid){
   common.index(obj.action,obj.uid,obj.id).then((res)=>{
@@ -214,14 +209,18 @@ function initChart(obj,termid){
 })
 }
 function dataconvert(source,target,termid){
+  console.log(source)
+  console.log(target)
   for(var key in target){
     if(termid==target[key].id){
       target[key].children=source;
       console.log(rawData);
+    }else{
+      if(target[key].children){
+        dataconvert(source,target[key].children,termid)
+      }
     }
-    if(target[key].children){
-      dataconvert(source,target[key].children,termid)
-    }
+    
   }
     myChart.setOption(option)
   
