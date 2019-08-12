@@ -140,8 +140,8 @@
             @keyup.enter.native="login"
           ></el-input>
         </div>
-        <div class="login-input">
-          <el-checkbox v-model="checkbox" label="2">自动登录</el-checkbox>
+        <div class="login-input" style="height:25px;">
+          
         </div>
         <div class="login-input loginbtn">
           <el-button type="success" @click="login">登 录</el-button>
@@ -180,7 +180,7 @@ export default {
         if (res.code == 200) {
           this.getUserInfo(res.userinfo.username)
           this.getUserId(res.userinfo.uid)
-          this.$router.push("/home");
+          this.$router.push("/infoSearch/index");
         } else {
           this.$message.error(res.msg);
         }

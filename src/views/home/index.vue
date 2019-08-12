@@ -11,7 +11,7 @@
 </style>
 <template>
   <el-container class="main">
-    <el-header class="header" style="height: 60px;">
+    <el-header class="header" style="height: 45px;">
       <Header></Header>
     </el-header>
     <el-container>

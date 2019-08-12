@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <div style="height: 60px; line-height: 60px; float: left;">
-      <img src="static/img/logo.png" alt />
-      <p class="left">
-        <b>术语智能一体化平台</b>
-      </p>
+  <div style="width:100%;height:45px;">
+    <div class="logo" >
+      <img src="static/img/logo.png" alt >
+      <p>术语智能一体化平台</p>
     </div>
-    <div class="exit" @click="exit">
-      退出
-      <i class="iconfont el-icon-biorights"></i>
-    </div>
-    <div class="right">
-      <i class="iconfont el-icon-biouserinfo" style="font-size:26px;"></i>
-      <span style="margin-right: 20px;">{{userName}}</span>
+    <div class="userinfo">
+      <div>
+        <i class="iconfont icon-touxiang" style="font-size:26px;line-height: 45px;"></i>
+      </div>
+      <div>{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;|</div>
+      <div @click="exit" style="padding-left:0px;">
+        &nbsp;&nbsp;退出
+          <i class="iconfont icon-Close" style="font-size:14px;"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -36,27 +36,33 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-img {
-  margin-right: 14px;
-  margin-top: 22px;
-  width: 129px;
-  float: left;
-}
-.left {
-  font-size: 16px;
-  float: left;
-}
-.exit {
-  margin-left: 20px;
-  margin-top: 13px;
-  font-size: 20px;
-  float: right;
-  cursor: pointer;
-}
-.right {
-  margin-top: 13px;
-  font-size: 20px;
-  border-right: 1px solid;
-  float: right;
-}
+  .logo {
+    width: 500px;
+    height: 44px;
+    padding:16px 27px 16px ;
+    background: #fff;
+    float:left;
+    img {
+      width: 118px;
+      height: 14px;
+      margin-right:14px;
+      float: left;
+    }
+    p{
+      float: left;
+      margin-top:-2px;
+    }
+  }
+  .userinfo {
+    float: right;
+    color: #333;
+    & > div {
+      float: left;
+      font-size: 14px;
+      line-height:45px;
+    }
+    & > div + div {
+      margin-left: 10px;
+    }
+  }
 </style>

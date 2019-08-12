@@ -1,5 +1,5 @@
 let echarts = require("echarts/lib/echarts");
-
+import { common } from "api/index.js";
 require("echarts/lib/chart/bar");
 require("echarts/lib/chart/line");
 require("echarts/lib/chart/pie");
@@ -102,89 +102,129 @@ export function setInitTree(id, data) {
   dom.resize();
 }
 
-export function setmaptree(diskData,id){
-  function colorMappingChange(value) {
-    console.log(value);
-    var levelOption = getLevelOption(value);
-    chart.setOption({
-      series: [{
-        levels: levelOption
-      }]
+export function setmaptree(rawData,id,userId){
+let myChart = echarts.init(document.getElementById(id))
+console.log(rawData)
+var option={
+  title: {
+      // text: 'ECharts 配置项查询分布',
+      // subtext: '2016/04',
+      left: 'leafDepth'
+  },
+  tooltip: {
+    formatter: function (info) {
+      var value = info.value;
+      return [
+        '<div class="tooltip-title">' + info.name + '</div>',
+        '标准术语数量: &nbsp;&nbsp;' + value[0] + '<br>',
+        '同义词数量: &nbsp;&nbsp;' + value[1] + '<br>',
+        '医院数量: &nbsp;&nbsp;' + value[2] + '<br>',
+    ].join('');
+  }
+  },
+  series: [{
+      name: 'option',
+      type: 'treemap',
+      visibleMin: 300,
+      //data: data.children,
+      data:rawData,
+      leafDepth: 2,
+      levels: [
+          {
+              itemStyle: {
+                  normal: {
+                      borderColor: '#555',
+                      borderWidth: 4,
+                      gapWidth: 4
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.6],
+              itemStyle: {
+                  normal: {
+                      borderColorSaturation: 0.7,
+                      gapWidth: 2,
+                      borderWidth: 2
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.5],
+              itemStyle: {
+                  normal: {
+                      borderColorSaturation: 0.6,
+                      gapWidth: 1
+                  }
+              }
+          },
+          {
+              colorSaturation: [0.3, 0.5]
+          }
+      ]
+  }]
+}
+
+myChart.setOption(option);
+let isClick=true;
+myChart.on('click',function (params) {
+
+  console.log(params)
+if(params.data){
+  if(!params.data.children){
+      var termid=params.data.id;
+      console.log(params.data);
+      let obj={
+        uid:userId,
+        id:termid,
+        action:'getIndexInfo'
+      }
+      initChart(obj,termid)
+  }
+}
+  console.log(rawData);       
+      
+});
+function initChart(obj,termid){
+  common.index(obj.action,obj.uid,obj.id).then((res)=>{
+  console.log(res)
+  if(res.code==200){
+    //isClick=false;
+      var newList = res.list.map(item=> {
+        let arr=[];
+        let child=[];
+        arr.push(Number(item.num_st));
+        arr.push(Number(item.num_sy));
+        arr.push(Number(item.num_hx));
+        if(item.children){
+          child=item.children
+        }
+        return {
+        name: item.name_cn,
+        value:arr,
+        id:item.id,
+        //children:child,
+      }            
     });
+    console.log(newList)
+    
+    dataconvert(newList,rawData,termid)
+        
   }
-
-var formatUtil = echarts.format;
-
-  function getLevelOption() {
-    return [
-      {
-        itemStyle: {
-          normal: {
-            borderWidth: 0,
-            gapWidth: 5
-          }
-        }
-      },
-      {
-        itemStyle: {
-          normal: {
-            gapWidth: 1
-          }
-        }
-      },
-      {
-        colorSaturation: [0.35, 0.5],
-        itemStyle: {
-          normal: {
-            gapWidth: 1,
-            borderColorSaturation: 0.6
-          }
-        }
-      }
-    ];
+})
+}
+function dataconvert(source,target,termid){
+  for(var key in target){
+    if(termid==target[key].id){
+      target[key].children=source;
+      console.log(rawData);
+    }
+    if(target[key].children){
+      dataconvert(source,target[key].children,termid)
+    }
   }
-  let myChart = echarts.init(document.getElementById(id))
-  myChart.setOption({
+    myChart.setOption(option)
+  
+}
 
-    title: {
-      text: 'Disk Usage',
-      left: 'center'
-    },
-
-    tooltip: {
-      formatter: function (info) {
-        /*var value = info.value;
-        var treePathInfo = info.treePathInfo;
-        var treePath = [];
-
-        for (var i = 1; i < treePathInfo.length; i++) {
-          treePath.push(treePathInfo[i].name);
-        }
-
-        return [
-          '<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
-          'Disk Usage: ' + formatUtil.addCommas(value) + ' KB',
-        ].join('');*/
-      }
-    },
-
-    series: [
-      {
-        name:'Disk Usage',
-        type:'treemap',
-        visibleMin: 300,
-        label: {
-          show: true,
-          formatter: '{b}'
-        },
-        itemStyle: {
-          normal: {
-            borderColor: '#fff'
-          }
-        },
-        levels: getLevelOption(),
-        data: diskData
-      }
-    ]
-  });
 }

@@ -12,13 +12,13 @@
     >
       <el-menu-item index="/infoSearch/index">
         <div class="icon">
-          <i class="el-icon-menu"></i>
+          <i class="iconfont icon-taskmanagement" style="color:#fff;"></i>
         </div>
         <span style>术语展示</span>
       </el-menu-item>
       <el-menu-item index="/infoSearch/search">
         <div class="icon">
-          <i class="el-icon-menu"></i>
+          <i class="iconfont icon-Terminologysearch" style="color:#fff;"></i>
         </div>
         <span slot="title">术语搜索</span>
       </el-menu-item>
