@@ -178,15 +178,12 @@
                 arr.push(Number(item.num_st));
                 arr.push(Number(item.num_sy));
                 arr.push(Number(item.num_hx));
-                let child=[];
-                if(item.children){
-                  child=item.children
-                }
+                
                 return {
                 name: item.name_cn,
                 value:arr,
                 id:item.id,
-                children:child,
+                
               }           
             });
             console.log(newList)

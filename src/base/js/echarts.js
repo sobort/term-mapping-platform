@@ -166,28 +166,30 @@ var option={
 }
 
 myChart.setOption(option);
+let isClick=true;
 myChart.on('click',function (params) {
-  console.log(rawData);
-        var termid="";
-        for(var i=0;i<rawData.length;i++){
-          if(rawData[i].name==params.name){
-            console.log(rawData[i].id);
-            termid=rawData[i].id;
-          }
-        }
-      
-      console.log(termid);
+
+  console.log(params)
+if(params.data){
+  if(!params.data.children){
+      var termid=params.data.id;
+      console.log(params.data);
       let obj={
         uid:userId,
         id:termid,
         action:'getIndexInfo'
       }
-      initChart(obj,1)
+      initChart(obj,termid)
+  }
+}
+  console.log(rawData);       
+      
 });
-function initChart(obj,type){
+function initChart(obj,termid){
   common.index(obj.action,obj.uid,obj.id).then((res)=>{
   console.log(res)
   if(res.code==200){
+    //isClick=false;
       var newList = res.list.map(item=> {
         let arr=[];
         let child=[];
@@ -201,23 +203,28 @@ function initChart(obj,type){
         name: item.name_cn,
         value:arr,
         id:item.id,
-        children:child,
+        //children:child,
       }            
     });
     console.log(newList)
     
-    var termid="";
-        for(var i=0;i<rawData.length;i++){
-          if(rawData[i].id==obj.id){
-            console.log(rawData[i].id);
-            rawData[i].children=newList;
-            console.log(rawData);
-            myChart.setOption(option)
-          }
-        }
-  }else{
+    dataconvert(newList,rawData,termid)
+        
   }
 })
+}
+function dataconvert(source,target,termid){
+  for(var key in target){
+    if(termid==target[key].id){
+      target[key].children=source;
+      console.log(rawData);
+    }
+    if(target[key].children){
+      dataconvert(source,target[key].children,termid)
+    }
+  }
+    myChart.setOption(option)
+  
 }
 
 }
