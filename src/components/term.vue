@@ -54,13 +54,15 @@
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="checkUpdateName">确 定</el-button>
         </span>
       </el-dialog>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'Vuex'
+import {common} from 'api/index.js';
 import * as $ from "jquery";
 function draw(context, x0, y0, x1, y1) {
   context.moveTo(x0, y0);
@@ -73,24 +75,22 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      termName: "",
-      newName: "",
+      termName: "", // 当前名称
+      termId: '', // 当前ID
+      newName: "", // 修改名称
       textarea: "",
-      tableData: [
-        { beginData: "eerq", changeName: "fefeqefq", textarea: "fqefqe" },
-        { beginData: "eerq", changeName: "fefeqefq", textarea: "fqefqe" },
-        { beginData: "eerq", changeName: "fefeqefq", textarea: "fqefqe" },
-        { beginData: "eerq", changeName: "fefeqefq", textarea: "fqefqe" }
-      ]
+      tableData: []
     };
   },
   methods: {
     colClick(x) {
-      console.log(x);
+      // console.log(x);
     },
     rowClick(x, y, i, k) {
-      this.dialogVisible = true;
-      this.termName = y.conceptName;
+      this.dialogVisible = true
+      this.termName = y.conceptName
+      this.termId = y.conceptId
+      this.initEditLog(y.conceptId)
     },
     rowEnter(x, y, i, k) {
       let currentId = y.conceptId;
@@ -135,50 +135,89 @@ export default {
           dom.style.backgroundColor = "rgb(153, 204, 255)";
         });
       }
+    },
+    // 获取编辑日志
+    initEditLog(conceptId){
+      let obj = {
+        id: conceptId,
+        uid: this.userId
+      }
+      common.getEditLog(obj).then(res => {
+        if(res.code === 200){
+          this.tableData = res.list
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    // 修改名称
+    checkUpdateName(){
+      let obj = {
+        id: this.termId,
+        name: this.newName,
+        uid: this.userId
+      }
+      common.editLog(obj).then(res => {
+        if(res.code === 200){
+          this.dialogVisible = false
+          this.$message.success(res.msg)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+  },
+  watch: {
+    'changeInfo': function(data) {
+      this.info = data
+      console.log(this.info)
     }
   },
   created() {
     this.$nextTick(function() {
       document.getElementById("chart").oncontextmenu = function(e) {
-        return false;
-      };
-      let innerWidth = $("#inner").width();
-      let innerHeight = $("#inner").height();
-      let canvas = document.getElementById("can");
+        return false
+      }
+      let innerWidth = $("#inner").width()
+      let innerHeight = $("#inner").height()
+      let canvas = document.getElementById("can")
 
-      canvas.width = Object.keys(this.info).length * 360;
-      canvas.height = innerHeight;
+      canvas.width = Object.keys(this.info).length * 360
+      canvas.height = innerHeight
 
-      const context = canvas.getContext("2d");
-      context.beginPath();
-      context.stroke();
+      const context = canvas.getContext("2d")
+      context.beginPath()
+      context.stroke()
 
       for (const key in this.info) {
-        const v = this.info[key];
+        const v = this.info[key]
         v.map(function(m, k) {
           // 获取起点坐标（子级，当前节点）
-          let id = `cube-${m.conceptId}`;
-          let dom = document.getElementById(id);
-          let x0 = dom.offsetLeft;
-          let y0 = dom.offsetTop + dom.offsetHeight / 2;
+          let id = `cube-${m.conceptId}`
+          let dom = document.getElementById(id)
+          let x0 = dom.offsetLeft
+          let y0 = dom.offsetTop + dom.offsetHeight / 2
 
           // 遍历父节点，获取父节点坐标
           if (m.parentNode) {
             m.parentNode.map(function(nodeId, n) {
-              let nodedom = document.getElementById(`cube-${nodeId}`);
-              let x1 = nodedom.offsetLeft + nodedom.offsetWidth;
-              let y1 = nodedom.offsetTop + nodedom.offsetHeight / 2;
+              let nodedom = document.getElementById(`cube-${nodeId}`)
+              let x1 = nodedom.offsetLeft + nodedom.offsetWidth
+              let y1 = nodedom.offsetTop + nodedom.offsetHeight / 2
 
               // 连线
-              context.beginPath();
-              draw(context, x1, y1, x0, y0);
-              context.stroke();
-            });
+              context.beginPath()
+              draw(context, x1, y1, x0, y0)
+              context.stroke()
+            })
           }
-        });
+        })
       }
-    });
-  }
+    })
+  },
+  computed: {
+    ...mapGetters(['userId'])
+  },
 };
 </script>
 <style lang=scss scoped>
@@ -188,7 +227,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    /* z-index: -1; */
+    z-index: 1;
   }
   .inner {
     width: auto;
@@ -197,18 +236,20 @@ export default {
     justify-content: flex-start;
     align-items: stretch;
     .chart-col {
-      width: 10px !important;
+      width: 160px !important;
       padding: 10px 30px;
+      margin-left: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       .chart-row {
-        width: 10px !important;
-        height: 10px;
+        width: 160px !important;
+        height: 70px;
         border-radius: 8px;
         border: 1px solid #000;
-        /* padding: 0px 10px; */
+        padding: 0px 10px;
+        margin-top: 80px;
         margin-bottom: 30px;
         cursor: pointer;
         background: #fff;

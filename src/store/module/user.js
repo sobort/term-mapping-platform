@@ -9,7 +9,7 @@ export default {
   },
   mutations: {
     getUserInfo (state, flag) {
-      return state.userId = flag;
+      return state.userName = flag;
     },
     getUserId (state, flag) {
       return state.userId = flag;
