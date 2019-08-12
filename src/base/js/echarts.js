@@ -166,9 +166,14 @@ var option={
 }
 
 myChart.setOption(option);
+var isClick=0;
 myChart.on('click',function (params) {
 if(params.data){
   if(!params.data.children){
+      if(isClick==1){
+        isClick=0;
+        return false;
+      }
       var termid=params.data.id;
       console.log(params.data);
       let obj={
@@ -184,7 +189,7 @@ function initChart(obj,termid){
   common.index(obj.action,obj.uid,obj.id).then((res)=>{
   console.log(res)
   if(res.code==200){
-    //isClick=false;
+      isClick=res.isLast;
       var newList = res.list.map(item=> {
         let arr=[];
         let child=[];
