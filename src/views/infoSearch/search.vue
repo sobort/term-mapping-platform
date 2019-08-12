@@ -86,11 +86,13 @@
     <div class="home-echarts">
       <el-row style="height: 100%;">
         <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
-          <div style="margin: 20px;float: right;">
+          <div style="margin: 20px 10px; text-align: right;">
             <el-button type="info" @click="changeTreeTable">树形图</el-button>
             <el-button type="info" @click="changeDataTable">数据图</el-button>
           </div>
-          <div id="tree" v-show="displayChart" style="width: 600px; height: 500px;"></div>
+          <div style="overflow: auto; height: 100%;">
+            <div id="tree" v-show="displayChart" style="width: 100%; height: 100%;"></div>
+          </div>
           <div id="chart" v-show="!displayChart">
             <term style="width: 100%;" :info="info"></term>
           </div>
@@ -100,8 +102,8 @@
             <el-row>
               <el-col :span="6">
                 <div style="margin-left: 10px;">
-                  <el-table class="tag-table" 
-                    :data="tagDataList" border 
+                  <el-table class="tag-table"
+                    :data="tagDataList" border
                     :header-cell-style="headerStyle"
                     max-height="300"
                     @row-click="tagClickList">
@@ -118,7 +120,12 @@
               </el-col>
               <el-col :span="18">
                 <div class="piecharts" style="margin: 0px 20px;">
-                  <el-table class="tag-table" :data="searchDataList" border :header-cell-style="tableHeaderStyle" max-height="300">
+                  <el-table class="tag-table"
+                    :data="searchDataList"
+                    border
+                    :header-cell-style="{background:'#5473E8', color:'#fff'}"
+                    max-height="300"
+                    @row-click="searchClickList">
                     <el-table-column prop="name_cn" label="临床术语中文" align="center"></el-table-column>
                     <el-table-column prop="name_en" label="英文同义词" align="center"></el-table-column>
                     <el-table-column prop="fsn" label="英文标准" align="center"></el-table-column>
@@ -131,9 +138,9 @@
                 <el-col :span="8" style="height: 100%;border-right: 2px solid #EFF3F6;">
                   <div class="synonym">
                     <div class="chartTitle">同义词</div>
-                    <p>标准概念中文: {{chinese}}</p>
-                    <p>标准概念英文: {{english}}</p>
-                    <p>标准概念编码: {{code}}</p>
+                    <p>标准概念中文: {{chineseName}}</p>
+                    <p>标准概念英文: {{englishName}}</p>
+                    <p>标准概念编码: {{codeStr}}</p>
                     <el-row>
                       <el-col :span="12" v-for="(val,index) in similar" :key="index">
                         <div class="similar">
@@ -182,9 +189,9 @@ export default {
       ],
       ctype: '', // 匹配方式
       searchText: "", // 搜索内容
-      chinese: '', // 标准概念中文
-      english: '', // 标准概念英文
-      code: '', // 标准概念编码
+      chineseName: '', // 标准概念中文
+      englishName: '', // 标准概念英文
+      codeStr: '', // 标准概念编码
       similar: [], // 同义词列表
       treedata: {}, // 树图数据
     };
@@ -199,7 +206,6 @@ export default {
         this.tagDataList = res.tagList
         this.searchDataList = res.searchList
       })
-      ECHART.setInitAtlas('atlas')
     },
     // 初始化树形图
     getTree(){
@@ -218,8 +224,8 @@ export default {
               data: [this.treedata],
               top: "10%",
               left: "20%",
-              bottom: "2%",
-              right: "40%",
+              bottom: "20%",
+              right: "30%",
               symbolSize: 7,
               label: {
                 normal: {
@@ -245,7 +251,6 @@ export default {
         });
         dom.resize();
       })
-      // ECHART.setInitTree('tree', this.treedata)
     },
     clickTree(param){ // 树形图点击
       let obj = {
@@ -263,12 +268,6 @@ export default {
         return { display: 'none' }
       } else if (param.rowIndex == '0') {
         return { background: '#DDE3FA'}
-      }
-    },
-    // 搜索列表表头样式
-    tableHeaderStyle(param){
-      if (param.rowIndex == '0') {
-        return { background: '#5473E8', color: '#fff'}
       }
     },
     // 搜索按钮
@@ -302,9 +301,19 @@ export default {
     tagClickList(param){
       let obj = {
         type: 1,
-        keyword: '',
+        keyword: this.searchText,
         id: '',
         tag: param.tagName,
+        uid: this.userId
+      }
+      this.searchAll(obj)
+    },
+    searchClickList(param){
+      let obj = {
+        type: 1,
+        keyword: '',
+        id: param.id,
+        tag: '',
         uid: this.userId
       }
       this.searchAll(obj)
@@ -312,10 +321,26 @@ export default {
     // 搜索接口调用
     searchAll(obj){
       common.searchAll(obj).then(res => {
+        console.log(res)
         if(res.code === 200){
           this.searchDataList = res.searchList
           this.tagDataList = res.tagList
           this.similar = res.syList
+          this.chineseName = res.searchList[0].name_cn
+          this.englishName = res.searchList[0].name_en
+          this.codeStr = res.searchList[0].fsn
+          if(res.scatterList.length !== 0){
+            let obj = {}
+            res.scatterList.forEach(item => {
+
+            })
+            obj.data = res.scatterList
+            if(res.relationshipGroup !== 0){
+              obj.links = res.relationshipGroup
+            }
+
+            ECHART.setInitAtlas('atlas', obj)
+          }
           if(res.rectangleList){
             let obj = {}
             obj = res.rectangleList

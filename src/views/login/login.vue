@@ -155,7 +155,7 @@
 </template>
 <script>
 import { mapMutations } from 'Vuex'
-import { common } from "api/index.js";
+import { common } from "api/index.js"
 export default {
   name: "login",
   data() {
@@ -163,7 +163,7 @@ export default {
       email: "",
       password: "",
       checkbox: "1"
-    };
+    }
   },
   methods: {
     ...mapMutations([
@@ -174,18 +174,18 @@ export default {
       let obj = {
         username: this.email,
         passwd: this.password
-      };
+      }
       common.login(obj).then(res => {
         if (res.code == 200) {
           this.getUserInfo(res.userinfo.username)
           this.getUserId(res.userinfo.uid)
-          this.$router.push("/infoSearch/index");
+          this.$router.push("/infoSearch/index")
         } else {
-          this.$message.error(res.msg);
+          this.$message.error(res.msg)
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 

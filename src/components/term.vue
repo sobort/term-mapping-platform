@@ -46,10 +46,11 @@
         </div>
         <div>
           <span>修订记录</span>
-          <el-table :data="tableData" :show-header="false">
-            <el-table-column prop="beginData"></el-table-column>
-            <el-table-column prop="changeName"></el-table-column>
-            <el-table-column prop="textarea"></el-table-column>
+          <el-table :data="tableData" border :header-cell-style="{background:'#5473E8', color:'#fff'}">
+            <el-table-column prop="username" label="用户名" header-align="center"></el-table-column>
+            <el-table-column prop="oldName" label="旧值" header-align="center"></el-table-column>
+            <el-table-column prop="newName" label="新值" header-align="center"></el-table-column>
+            <el-table-column prop="add_time" label="修改时间" header-align="center"></el-table-column>
           </el-table>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -168,16 +169,8 @@ export default {
     },
   },
   watch: {
-    'changeInfo': function(data) {
-      this.info = data
-      console.log(this.info)
-    }
-  },
-  created() {
-    this.$nextTick(function() {
-      document.getElementById("chart").oncontextmenu = function(e) {
-        return false
-      }
+    info(val) {
+      this.info = val
       let innerWidth = $("#inner").width()
       let innerHeight = $("#inner").height()
       let canvas = document.getElementById("can")
@@ -212,6 +205,13 @@ export default {
             })
           }
         })
+      }
+    }
+  },
+  created() {
+    this.$nextTick(function() {
+      document.getElementById("chart").oncontextmenu = function(e) {
+        return false
       }
     })
   },

@@ -13,27 +13,8 @@ require("echarts/map/js/province/anhui");
 require("echarts/lib/component/tooltip");
 require("echarts/lib/component/legend");
 
-// 数据分布 柱状图图表
-export function setDataMask(id) {
-  let dom = echarts.init(document.getElementById(id));
-  dom.setOption({
-    tooltip: {},
-    xAxis: {
-      data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-    },
-    yAxis: {},
-    series: [
-      {
-        name: "销量",
-        type: "bar",
-        data: [5, 20, 36, 10, 10, 20]
-      }
-    ]
-  });
-  dom.resize();
-}
-
-export function setInitAtlas(id) {
+// 术语搜索概念图谱
+export function setInitAtlas(id, grape) {
   let dom = echarts.init(document.getElementById(id));
   dom.setOption({
     series: [
@@ -41,12 +22,8 @@ export function setInitAtlas(id) {
         name: "Les Miserables",
         type: "graph",
         layout: "force",
-        data: [
-          { id: "0", name: "Myriel" },
-          { id: "1", name: "Napoleon" },
-          { id: "2", name: "MlleBaptistine" }
-        ],
-        links: [{ source: "1", target: "0" }, { source: "2", target: "0" }],
+        data: grape.data,
+        links: grape.links,
         label: {
           normal: {
             show: true,
