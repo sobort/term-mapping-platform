@@ -106,7 +106,6 @@
   }
 }
 </style>
-
 <template>
   <div style="height:100%;position: relative;">
     <el-header style="height:50px;">
@@ -141,16 +140,15 @@
           ></el-input>
         </div>
         <div class="login-input" style="height:25px;">
-          
         </div>
         <div class="login-input loginbtn">
           <el-button type="success" @click="login">登 录</el-button>
         </div>
       </div>
     </div>
-    <el-footer
-      style="height:36px;"
-    >© 2011-2019 Umeng.com , All Rights Reserved 京ICP备案11021163号-6 | 京公网安备 110108008330</el-footer>
+    <el-footer style="height:36px;">
+      © 2011-2019 Umeng.com , All Rights Reserved 京ICP备案11021163号-6 | 京公网安备 110108008330
+    </el-footer>
   </div>
 </template>
 <script>
@@ -179,7 +177,7 @@ export default {
         if (res.code == 200) {
           this.getUserInfo(res.userinfo.username)
           this.getUserId(res.userinfo.uid)
-          this.$router.push("/infoSearch/index")
+          this.$router.push("/indexpage")
         } else {
           this.$message.error(res.msg)
         }

@@ -3,13 +3,11 @@
     <router-view/>
   </div>
 </template>
-
 <script>
 export default {
   name: 'App'
 }
 </script>
-
 <style lang='scss'>
 // @import 'base/css/base-style.scss';
 #app {
@@ -19,5 +17,4 @@ export default {
   /* text-align: center; */
   color: #2c3e50;
 }
-
 </style>

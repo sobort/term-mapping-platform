@@ -169,8 +169,12 @@ export default {
     },
   },
   watch: {
-    info(val) {
-      this.info = val
+  },
+  created() {
+    this.$nextTick(function() {
+      document.getElementById("chart").oncontextmenu = function(e) {
+        return false
+      }
       let innerWidth = $("#inner").width()
       let innerHeight = $("#inner").height()
       let canvas = document.getElementById("can")
@@ -187,6 +191,7 @@ export default {
         v.map(function(m, k) {
           // 获取起点坐标（子级，当前节点）
           let id = `cube-${m.conceptId}`
+          console.log(id)
           let dom = document.getElementById(id)
           let x0 = dom.offsetLeft
           let y0 = dom.offsetTop + dom.offsetHeight / 2
@@ -205,13 +210,6 @@ export default {
             })
           }
         })
-      }
-    }
-  },
-  created() {
-    this.$nextTick(function() {
-      document.getElementById("chart").oncontextmenu = function(e) {
-        return false
       }
     })
   },

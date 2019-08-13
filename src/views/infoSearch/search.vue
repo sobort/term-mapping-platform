@@ -75,7 +75,7 @@
             <el-col :span="18">
               <div style="margin: 0px 20px;">
                 <el-input v-model="searchText" placeholder="请输入内容">
-                  <el-button slot="append" icon="el-icon-search" @click="searchAllList"></el-button>
+                  <el-button slot="append" icon="el-icon-search" @keyup.enter.native="searchAllList"></el-button>
                 </el-input>
               </div>
             </el-col>
@@ -137,10 +137,9 @@
               <el-row style="height: 100%;">
                 <el-col :span="8" style="height: 100%;border-right: 2px solid #EFF3F6;">
                   <div class="synonym">
-                    <div class="chartTitle">同义词</div>
                     <p>标准概念中文: {{chineseName}}</p>
                     <p>标准概念英文: {{englishName}}</p>
-                    <p>标准概念编码: {{codeStr}}</p>
+                    <div class="chartTitle">同义词</div>
                     <el-row>
                       <el-col :span="12" v-for="(val,index) in similar" :key="index">
                         <div class="similar">
@@ -187,13 +186,13 @@ export default {
           id: 2
         }
       ],
-      ctype: '', // 匹配方式
+      ctype: '模糊匹配（中文）', // 匹配方式
       searchText: "", // 搜索内容
       chineseName: '', // 标准概念中文
       englishName: '', // 标准概念英文
-      codeStr: '', // 标准概念编码
       similar: [], // 同义词列表
       treedata: {}, // 树图数据
+      treeId: '',
     };
   },
   computed: {
@@ -253,6 +252,7 @@ export default {
       })
     },
     clickTree(param){ // 树形图点击
+      this.treeId = param.data.id
       let obj = {
         type: 1,
         keyword: '',
@@ -293,6 +293,14 @@ export default {
     changeDataTable(){
       if(JSON.stringify(this.info) !== "{}"){
         this.displayChart = false
+        let obj = {
+          type: 1,
+          keyword: '',
+          id: this.treeId,
+          tag: '',
+          uid: this.userId
+        }
+        this.searchAll(obj)
       } else {
         this.$message.error("请选择树形图节点")
       }
@@ -321,14 +329,12 @@ export default {
     // 搜索接口调用
     searchAll(obj){
       common.searchAll(obj).then(res => {
-        console.log(res)
         if(res.code === 200){
           this.searchDataList = res.searchList
           this.tagDataList = res.tagList
           this.similar = res.syList
           this.chineseName = res.searchList[0].name_cn
           this.englishName = res.searchList[0].name_en
-          this.codeStr = res.searchList[0].fsn
           if(res.scatterList.length !== 0){
             let obj = {}
             res.scatterList.forEach(item => {
@@ -341,6 +347,7 @@ export default {
 
             ECHART.setInitAtlas('atlas', obj)
           }
+          console.log(res.rectangleList)
           if(res.rectangleList){
             let obj = {}
             obj = res.rectangleList

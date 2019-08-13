@@ -10,8 +10,7 @@
     </div>
     <el-row>
       <el-col :span="18" style="padding:0 14px;">
-        <el-col :span="8" style="padding:0 14px;margin-bottom:20px;" v-for="(item,index) in lineList"
-                :key="index">
+        <el-col :span="8" style="padding:0 14px;margin-bottom:20px;" v-for="(item,index) in lineList" :key="index">
           <div class="home-content" style="">
             <div>
               <span style="font-size:28px;">{{item.number}}</span>
@@ -24,18 +23,6 @@
       </el-col>
       <el-col :span="6" style="padding:0 20px 20px 20px;;max-height:700px;overflow-y:scroll;border-left: 1px solid #dfe3e9;">
         <div style="margin-bottom:40px;">
-          <!--<div class="mode">
-            <div style="color:#FFC859;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>诊断</div>
-            <div class="leftMode">
-              <span class="num">465465</span><br>
-              <span class="term">标准术语</span>
-            </div>
-            <div class="rightMode">
-              <span class="num">465465</span><br>
-              <span class="term">同义词</span>
-            </div>
-            <img :src=bg1>
-          </div>-->
           <div class="mode" v-for="(item,index) in list">
             <div style="color:#8095E7;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>{{item.name_cn}}</div>
             <div class="leftMode">
@@ -48,38 +35,12 @@
             </div>
             <img :src=bg2>
           </div>
-          <!--<div class="mode">
-            <div style="color:#6BDACE;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>药品</div>
-            <div class="leftMode">
-              <span class="num">465465</span><br>
-              <span class="term">标准术语</span>
-            </div>
-            <div class="rightMode">
-              <span class="num">465465</span><br>
-              <span class="term">同义词</span>
-            </div>
-            <img :src=bg3>
-          </div>
-          <div class="mode">
-            <div style="color:#8BCEF4;"><i class="iconfont icon-Drugs" style="margin:0 10px;"></i>手术</div>
-            <div class="leftMode">
-              <span class="num">465465</span><br>
-              <span class="term">标准术语</span>
-            </div>
-            <div class="rightMode">
-              <span class="num">465465</span><br>
-              <span class="term">同义词</span>
-            </div>
-            <img :src=bg4>
-          </div>
-        -->
         </div>
       </el-col>
     </el-row>
     <div>
       <div id="bar" style="width: 750px; height: 495px;"></div>
     </div>
-
   </div>
 </template>
 <script>
@@ -129,12 +90,10 @@
       };
     },
     mounted(){
-      //this.initChart();
       this.getIndexInfo();
     },
     methods: {
       getIndexInfo(){
-          console.log(this.$store.state.userId)
           let obj={
             uid:this.userId,
             id:"1",
@@ -144,13 +103,11 @@
       },
       initChart(obj,type){
           common.index(obj.action,obj.uid,obj.id).then((res)=>{
-          console.log(res)
           if(res.code==200){
             this.lineList[0].number=res.num_hx;
             this.lineList[1].number=res.num_st;
             this.lineList[2].number=res.num_sy;
             this.list=res.list
-            console.log(this.list);
               var newList = this.list.map(item=> {
                 let arr=[];
                 arr.push(Number(item.num_st));
@@ -164,7 +121,6 @@
                 
               }           
             });
-            console.log(newList)
               ECHART.setmaptree(newList,'treeMap',this.userId)
           }else{
             this.$message.error(res.msg)

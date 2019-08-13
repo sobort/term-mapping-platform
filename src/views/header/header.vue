@@ -9,7 +9,7 @@
         <i class="iconfont icon-touxiang" style="font-size:26px;line-height: 45px;"></i>
       </div>
       <div>{{userName}}&nbsp;&nbsp;&nbsp;&nbsp;|</div>
-      <div @click="exit" style="padding-left:0px;">
+      <div @click="exit" style="padding-left:0px; cursor: pointer;">
         &nbsp;&nbsp;退出
           <i class="iconfont icon-Close" style="font-size:14px;"></i>
       </div>
@@ -31,9 +31,8 @@ export default {
     ...mapGetters(['userName'])
   },
   mounted(){
-    console.log(this.userName)
   },
-};
+}
 </script>
 <style lang="less" scoped>
   .logo {

@@ -10,13 +10,13 @@
       text-color="#fff"
       active-text-color="#fff"
     >
-      <el-menu-item index="/infoSearch/index">
+      <el-menu-item index="/indexpage">
         <div class="icon">
           <i class="iconfont icon-taskmanagement" style="color:#fff;"></i>
         </div>
         <span style>术语展示</span>
       </el-menu-item>
-      <el-menu-item index="/infoSearch/search">
+      <el-menu-item index="/searchpage">
         <div class="icon">
           <i class="iconfont icon-Terminologysearch" style="color:#fff;"></i>
         </div>
