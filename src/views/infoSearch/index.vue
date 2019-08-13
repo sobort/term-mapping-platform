@@ -146,9 +146,9 @@
           common.index(obj.action,obj.uid,obj.id).then((res)=>{
           console.log(res)
           if(res.code==200){
-            this.lineList[0].number=res.num_hx;
-            this.lineList[1].number=res.num_st;
-            this.lineList[2].number=res.num_sy;
+            this.lineList[0].number=res.num_sy;
+            this.lineList[1].number=res.num_hx;
+            this.lineList[2].number=res.num_st;
             this.list=res.list
             console.log(this.list);
               var newList = this.list.map(item=> {
