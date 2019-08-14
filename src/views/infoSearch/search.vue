@@ -49,6 +49,9 @@
   width: 40px;
   color: #fff;
 }
+.el-table .warning-row {
+  background: #DDE3FA;
+}
 </style>
 
 <template>
@@ -74,8 +77,8 @@
             </el-col>
             <el-col :span="18">
               <div style="margin: 0px 20px;">
-                <el-input v-model="searchText" placeholder="请输入内容">
-                  <el-button slot="append" icon="el-icon-search" @keyup.enter.native="searchAllList"></el-button>
+                <el-input v-model="searchText" placeholder="请输入内容" @keyup.enter.native="searchAllList">
+                  <el-button slot="append" icon="el-icon-search" @click="searchAllList"></el-button>
                 </el-input>
               </div>
             </el-col>
@@ -85,16 +88,16 @@
     </div>
     <div class="home-echarts">
       <el-row style="height: 100%;">
-        <el-col :span="12" style="height: 100%; border-right: 2px solid #EFF3F6;">
+        <el-col :span="12" style="overflow: auto; height: 100%; border-right: 2px solid #EFF3F6;">
           <div style="margin: 20px 10px; text-align: right;">
             <el-button type="info" @click="changeTreeTable">树形图</el-button>
             <el-button type="info" @click="changeDataTable">数据图</el-button>
           </div>
-          <div style="overflow: auto; height: 100%;">
-            <div id="tree" v-show="displayChart" style="width: 100%; height: 100%;"></div>
+          <div v-show="displayChart" style="height: 90%;">
+            <div id="tree" style="width: 100%; height: 100%;"></div>
           </div>
-          <div id="chart" v-show="!displayChart">
-            <term style="width: 100%;" :info="info"></term>
+          <div id="chart" v-show="!displayChart" style="height: 90%;">
+            <term style="width: 100%;height: 90%;" :key="infoValue" :info="info"></term>
           </div>
         </el-col>
         <el-col :span="12" style="height: 100%;">
@@ -106,6 +109,7 @@
                     :data="tagDataList" border
                     :header-cell-style="headerStyle"
                     max-height="300"
+                    :row-class-name="tableRowClassName"
                     @row-click="tagClickList">
                     <el-table-column label='语义标签' header-align="center">
                       <el-table-column prop="tagName"></el-table-column>
@@ -123,6 +127,7 @@
                   <el-table class="tag-table"
                     :data="searchDataList"
                     border
+                    :row-class-name="tableSearchClassName"
                     :header-cell-style="{background:'#5473E8', color:'#fff'}"
                     max-height="300"
                     @row-click="searchClickList">
@@ -174,6 +179,7 @@ export default {
     return {
       displayChart: true, //显示图表
       info: {},
+      infoValue: 0,
       searchDataList: [], // 搜索列表数据
       tagDataList: [], // 语义标签列表数据
       ctypelist: [ // 匹配方式列表
@@ -193,6 +199,8 @@ export default {
       similar: [], // 同义词列表
       treedata: {}, // 树图数据
       treeId: '',
+      rowId: Number,
+      searchId: Number,
     };
   },
   computed: {
@@ -267,12 +275,15 @@ export default {
       if (param.rowIndex == '1') {
         return { display: 'none' }
       } else if (param.rowIndex == '0') {
-        return { background: '#DDE3FA'}
+        return { background: '#5473E8', color: '#fff'}
       }
     },
     // 搜索按钮
     searchAllList(){
-      if(this.searchText && this.ctype){
+      if(this.searchText){
+        if(this.ctype === '模糊匹配（中文）'){
+          this.ctype = 1
+        }
         let obj = {
           type: this.ctype,
           keyword: this.searchText,
@@ -280,9 +291,7 @@ export default {
           tag: '',
           uid: this.userId
         }
-        this.searchAll(obj)
-      } else {
-        this.getIndex()
+        this.changeSearchAll(obj)
       }
     },
     // 树形图切换
@@ -309,13 +318,23 @@ export default {
     tagClickList(param){
       let obj = {
         type: 1,
-        keyword: this.searchText,
+        keyword: '',
         id: '',
         tag: param.tagName,
         uid: this.userId
       }
-      this.searchAll(obj)
+      this.changeSearchAll(obj)
+      this.rowId = param.index
     },
+    tableRowClassName({row, rowIndex}){
+      row.index = rowIndex
+      return rowIndex === this.rowId ? 'warning-row' : ''
+    },
+    tableSearchClassName({row, rowIndex}){
+      row.index = rowIndex
+      return rowIndex === this.searchId ? 'warning-row' : ''
+    },
+    // 搜索列表行点击事件
     searchClickList(param){
       let obj = {
         type: 1,
@@ -325,29 +344,22 @@ export default {
         uid: this.userId
       }
       this.searchAll(obj)
+      this.searchId = param.index
     },
     // 搜索接口调用
     searchAll(obj){
       common.searchAll(obj).then(res => {
         if(res.code === 200){
-          this.searchDataList = res.searchList
-          this.tagDataList = res.tagList
           this.similar = res.syList
           this.chineseName = res.searchList[0].name_cn
           this.englishName = res.searchList[0].name_en
-          if(res.scatterList.length !== 0){
+          
+          if(res.relationshipGroup !== 0){
             let obj = {}
-            res.scatterList.forEach(item => {
-
-            })
-            obj.data = res.scatterList
-            if(res.relationshipGroup !== 0){
-              obj.links = res.relationshipGroup
-            }
-
+            obj = res.relationshipGroup
             ECHART.setInitAtlas('atlas', obj)
           }
-          console.log(res.rectangleList)
+            
           if(res.rectangleList){
             let obj = {}
             obj = res.rectangleList
@@ -355,6 +367,35 @@ export default {
             delete obj.conceptId
             delete obj.conceptName
             this.info = obj
+            this.infoValue +=1
+          }
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
+    },
+    changeSearchAll(obj){
+      common.searchAll(obj).then(res => {
+        if(res.code === 200){
+          this.searchDataList = res.searchList
+          this.similar = res.syList
+          this.chineseName = res.searchList[0].name_cn
+          this.englishName = res.searchList[0].name_en
+          
+          if(res.relationshipGroup !== 0){
+            let obj = {}
+            obj = res.relationshipGroup
+            ECHART.setInitAtlas('atlas', obj)
+          }
+            
+          if(res.rectangleList){
+            let obj = {}
+            obj = res.rectangleList
+            delete obj.colnum
+            delete obj.conceptId
+            delete obj.conceptName
+            this.info = obj
+            this.infoValue +=1
           }
         } else {
           this.$message.error(res.msg);

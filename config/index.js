@@ -4,7 +4,7 @@ const path = require("path")
 module.exports = {
   dev: {
     assetsSubDirectory: "static",
-    assetsPublicPath: "./",
+    assetsPublicPath: "/",
     proxyTable: {
       "/": {
         // target: 'http://172.30.1.160:8091',
@@ -14,7 +14,7 @@ module.exports = {
     },
     host: "localhost",
     port: 9797, 
-    autoOpenBrowser: true,
+    autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false,

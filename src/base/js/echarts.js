@@ -22,8 +22,9 @@ export function setInitAtlas(id, grape) {
         name: "Les Miserables",
         type: "graph",
         layout: "force",
-        data: grape.data,
+        data: grape.nodes,
         links: grape.links,
+        categories: [{name: "类目0"},{name: "类目1"}],
         label: {
           normal: {
             show: true,

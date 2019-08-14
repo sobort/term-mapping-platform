@@ -21,15 +21,13 @@
   <div class="chart" id="chart">
     <canvas class="can" id="can"></canvas>
     <div class="inner" id="inner">
-      <div class="chart-col" v-for="(x,i) in info" :key="i" @click="colClick(x)">
+      <div class="chart-col" v-for="(x,i) in info" :key="i">
         <div
           class="chart-row"
           v-for="(y,k) in x"
           :key="k"
           :id="'cube-'+y.conceptId"
           @click.right="rowClick(x,y,i,k)"
-          @mouseenter="rowEnter(x,y,i,k)"
-          @mouseleave="rowLeave(x,y,i,k)"
         >{{y.conceptName}}</div>
       </div>
     </div>
@@ -179,7 +177,7 @@ export default {
       let innerHeight = $("#inner").height()
       let canvas = document.getElementById("can")
 
-      canvas.width = Object.keys(this.info).length * 360
+      canvas.width = Object.keys(this.info).length * 180
       canvas.height = innerHeight
 
       const context = canvas.getContext("2d")
@@ -191,7 +189,7 @@ export default {
         v.map(function(m, k) {
           // 获取起点坐标（子级，当前节点）
           let id = `cube-${m.conceptId}`
-          console.log(id)
+          
           let dom = document.getElementById(id)
           let x0 = dom.offsetLeft
           let y0 = dom.offsetTop + dom.offsetHeight / 2
@@ -225,9 +223,10 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: -1;
   }
   .inner {
+    height: 100%;
     width: auto;
     display: flex;
     flex-direction: row;
@@ -246,9 +245,9 @@ export default {
         height: 70px;
         border-radius: 8px;
         border: 1px solid #000;
-        padding: 0px 10px;
-        margin-top: 80px;
-        margin-bottom: 30px;
+        /* padding: 0px 10px; */
+        margin-top: 5px;
+        margin-bottom: 10px;
         cursor: pointer;
         background: #fff;
         font-weight: bold;
