@@ -176,8 +176,8 @@ export default {
       common.login(obj).then(res => {
         if (res.code == 200) {
           this.getUserInfo(res.userinfo.username)
-          this.getUserId(res.userinfo.uid)
-          this.$router.push("/indexpage")
+          this.getUserId(res.userinfo.id)
+          this.$router.push("/home-page")
         } else {
           this.$message.error(res.msg)
         }

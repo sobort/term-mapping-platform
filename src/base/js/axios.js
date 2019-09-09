@@ -19,9 +19,12 @@ Axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
+Axios.defaults.baseURL = 'http://www.aiplatform.com'
+Axios.defaults.uploadURL = 'http://www.aiplatform.com'
 // 全局访问请求对象
-window.$ajax = Axios;
+// window.$ajax = Axios;
 // Axios.defaults.baseURL = "http://47.104.241.186/huxi";
 // Axios.defaults.uploadURL = "http://47.104.241.186/huxi";
-// Axios.default.timeout = 3000;
-// export default Axios;
+Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+Axios.default.timeout = 3000;
+export default Axios;

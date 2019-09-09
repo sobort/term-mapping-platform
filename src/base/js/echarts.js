@@ -1,201 +1,130 @@
-let echarts = require("echarts/lib/echarts")
-import { common } from "api/index.js"
-require("echarts/lib/chart/bar")
-require("echarts/lib/chart/line")
-require("echarts/lib/chart/pie")
-require("echarts/lib/chart/map")
-require("echarts/lib/chart/scatter")
-require("echarts/lib/chart/effectScatter")
-require("echarts/lib/component/geo")
-require("echarts/map/js/china.js")
-require("echarts/map/js/province/anhui")
+let echarts = require("echarts/lib/echarts");
+
+require("echarts/lib/chart/bar");
+require("echarts/lib/chart/line");
+require("echarts/lib/chart/pie");
+require("echarts/lib/chart/map");
+require("echarts/lib/chart/scatter");
+require("echarts/lib/chart/effectScatter");
+require("echarts/lib/component/geo");
 // 引入所需组件
-require("echarts/lib/component/tooltip")
-require("echarts/lib/component/legend")
+require("echarts/lib/component/tooltip");
+require("echarts/lib/component/legend");
 
-// 术语搜索概念图谱
-export function setInitAtlas(id, grape) {
-  let dom = echarts.init(document.getElementById(id))
+// 首页 任务概况
+export function setTaskStatus(id, data) {
+  let dom = echarts.init(document.getElementById(id));
   dom.setOption({
-    series: [
-      {
-        name: "Les Miserables",
-        type: "graph",
-        layout: "force",
-        data: grape.nodes,
-        links: grape.links,
-        categories: [{name: "类目0"},{name: "类目1"}],
-        label: {
-          normal: {
-            show: true,
-            position: "right"
-          },
-          emphasis: {
-            show: true,
-            position: "inside"
-          }
-        },
-        force: {
-          repulsion: 100
-        }
-      }
-    ]
-  })
-  dom.resize()
-}
-
-export function setInitTree(id, data) {
-  let dom = echarts.init(document.getElementById(id))
-  dom.setOption({
-    series: [
-      {
-        type: "tree",
-        data: [data],
-        top: "10%",
-        left: "20%",
-        bottom: "10%",
-        right: "20%",
-        symbolSize: 7,
-        label: {
-          normal: {
-            position: "left",
-            verticalAlign: "middle",
-            align: "right",
-            fontSize: 13,
-            color: "#FFA65F"
-          }
-        },
-        leaves: {
-          label: {
-            normal: {
-              position: "right",
-              verticalAlign: "middle",
-              align: "left"
-            }
-          }
-        }
-      }
-    ]
-  })
-  dom.resize()
-}
-
-export function setmaptree(rawData, id, userId) {
-  let myChart = echarts.init(document.getElementById(id))
-  var option = {
-    title: {
-      // text: 'ECharts 配置项查询分布',
-      // subtext: '2016/04',
-      left: "leafDepth"
-    },
+    color: ["#35C1CE", "#5473E7"],
     tooltip: {
-      formatter: function(info) {
-        var value = info.value;
-        return [
-          '<div class="tooltip-title">' + info.name + "</div>",
-          "标准术语数量: &nbsp;&nbsp;" + value[0] + "<br>",
-          "同义词数量: &nbsp;&nbsp;" + value[1] + "<br>",
-          "医院数量: &nbsp;&nbsp;" + value[2] + "<br>"
-        ].join("")
-      }
+      trigger: "axis",
     },
-    series: [
+    xAxis: [
       {
-        name: "option",
-        type: "treemap",
-        visibleMin: 300,
-        //data: data.children,
-        data: rawData,
-        leafDepth: 2,
-        levels: [
-          {
-            itemStyle: {
-              normal: {
-                borderColor: "#555",
-                borderWidth: 4,
-                gapWidth: 4
-              }
-            }
-          },
-          {
-            colorSaturation: [0.3, 0.6],
-            itemStyle: {
-              normal: {
-                borderColorSaturation: 0.7,
-                gapWidth: 2,
-                borderWidth: 2
-              }
-            }
-          },
-          {
-            colorSaturation: [0.3, 0.5],
-            itemStyle: {
-              normal: {
-                borderColorSaturation: 0.6,
-                gapWidth: 1
-              }
-            }
-          },
-          {
-            colorSaturation: [0.3, 0.5]
-          }
-        ]
+        type: "category",
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          interval: 0
+        },
+        data: data.tagName
       }
-    ]
-  }
+    ],
+    yAxis: [{
+      type: "value",
+      show: false,
+      axisTick: {
+        show: false
+      }
+    }],
+    series: [
+    {
+      name: "Forest",
+      type: "bar",
+      barGap: '10%',
+      barCategoryGap: '40%',
+      barGap: 0,
+      data: data.totalNum
+    },
+    {
+      name: "Steppe",
+      type: "bar",
+      barGap: '10%',
+      barCategoryGap: '40%',
+      data: data.statsNum
+    }]
+  });
+  dom.resize();
+}
 
-  myChart.setOption(option)
-  var isClick = 0
-  myChart.on("click", function(params) {
-    if (params.data) {
-      if (!params.data.children) {
-        if (isClick == 1) {
-          isClick = 0
-          return false
-        }
-        var termid = params.data.id
-        let obj = {
-          uid: userId,
-          id: termid,
-          action: "getIndexInfo"
-        }
-        initChart(obj, termid)
-      }
-    }
+// 首页 项目状态
+export function setProjectStatus(id, tagName, data) {
+  let dom = echarts.init(document.getElementById(id));
+  dom.setOption({
+    color: ["#5473E7", "#67CE34", '#35C1CE', '#AF5ACF', '#E6559F', '#E9AB00'],
+    tooltip: {
+      trigger: "axis",
+      formatter: "{b}:{c}"
+    },
+    legend: {
+      icon: "circle",
+      itemWidth: 10,
+      itemHeight: 10,
+      itemGap: 20,
+      bottom: '10',
+      orient: 'horizontal',
+      left: 'center',
+      data: tagName
+    },
+    series: [{
+      name: '访问来源',
+      x1: '10%',
+      type: 'pie',
+      radius : '60%',
+      center: ['50%', '40%'],
+      label: {
+        show: true,
+        position: 'inside',
+        formatter: '{d}%',
+        formatter: function(data){
+          return data.percent.toFixed(0)+"%"
+        } 
+      },
+      data: data
+    }]
+  });
+  dom.resize();
+}
+
+// 术语映射统计
+export function setMapStatic(id, data) {
+  let dom = echarts.init(document.getElementById(id));
+  dom.setOption({
+    color: ['#0364FF'],
+    tooltip: {
+      trigger: 'axis',
+      formatter: '{b}:{c}'
+    },
+    xAxis: [{
+      type: 'category',
+      splitLine: {show: true},
+      axisTick: {show: false},
+      data: data.name
+    }],
+    yAxis: [{
+      type: 'value',
+      axisTick: {show: false},
+    }],
+    series: [{
+      name: 'Forest',
+      type: 'bar',
+      barCategoryGap: '80%',
+      data: data.num
+    }]
   })
-  function initChart(obj, termid) {
-    common.index(obj.action, obj.uid, obj.id).then(res => {
-      if (res.code == 200) {
-        isClick = res.isLast
-        var newList = res.list.map(item => {
-          let arr = []
-          let child = []
-          arr.push(Number(item.num_st))
-          arr.push(Number(item.num_sy))
-          arr.push(Number(item.num_hx))
-          if (item.children) {
-            child = item.children
-          }
-          return {
-            name: item.name_cn,
-            value: arr,
-            id: item.id
-          }
-        })
-        dataconvert(newList, rawData, termid)
-      }
-    })
-  }
-  function dataconvert(source, target, termid) {
-    for (var key in target) {
-      if (termid == target[key].id) {
-        target[key].children = source
-      } else {
-        if (target[key].children) {
-          dataconvert(source, target[key].children, termid)
-        }
-      }
-    }
-    myChart.setOption(option)
-  }
+  dom.resize()
 }

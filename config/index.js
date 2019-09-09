@@ -6,11 +6,11 @@ module.exports = {
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
     proxyTable: {
-      "/": {
-        // target: 'http://172.30.1.160:8091',
-        target: "http://47.104.241.186/huxi/",
-        changeOrigin: true
-      }
+      // "/": {
+      //   // target: 'http://172.30.1.160:8091',
+      //   target: "http://172.20.25.3/aiplatform/",
+      //   changeOrigin: true
+      // }
     },
     host: "localhost",
     port: 9797, 

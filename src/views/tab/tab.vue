@@ -10,17 +10,35 @@
       text-color="#fff"
       active-text-color="#fff"
     >
-      <el-menu-item index="/indexpage">
+      <el-menu-item index="/home-page">
         <div class="icon">
-          <i class="iconfont icon-taskmanagement" style="color:#fff;"></i>
+          <i class="iconfont icon-Rulemanagement"></i>
         </div>
-        <span style>术语展示</span>
+        <span style>首页</span>
       </el-menu-item>
-      <el-menu-item index="/searchpage">
+      <el-menu-item index="/task-manager-page">
         <div class="icon">
-          <i class="iconfont icon-Terminologysearch" style="color:#fff;"></i>
+          <i class="iconfont icon-taskmanagement"></i>
         </div>
-        <span slot="title">术语搜索</span>
+        <span slot="title">任务管理</span>
+      </el-menu-item>
+      <el-menu-item index="/map-entry">
+        <div class="icon">
+          <i class="iconfont icon-Terminologymapping"></i>
+        </div>
+        <span slot="title">术语映射</span>
+      </el-menu-item>
+      <el-menu-item index="/reviser-entry">
+        <div class="icon">
+          <i class="iconfont icon-Terminologyrevision"></i>
+        </div>
+        <span slot="title">术语审校</span>
+      </el-menu-item>
+      <el-menu-item index="/role-manager">
+        <div class="icon">
+          <i class="iconfont icon-Rolemanagement"></i>
+        </div>
+        <span slot="title">角色管理</span>
       </el-menu-item>
     </el-menu>
   </div>
@@ -43,6 +61,7 @@ export default {
   height: 100%;
   background: #222c3c;
   .el-menu {
+    border-right: solid 1px #000;
     .el-menu-item [class^="el-icon-"] {
       font-size: 28px;
       color: #fff;
@@ -53,11 +72,16 @@ export default {
       padding: 0 10px !important;
     }
     .icon {
+      margin-top: 20px;
       text-align: center;
       height: 30px;
+      .iconfont{
+        font-size: 25px;
+        color:#fff;
+      }
     }
     span {
-      font-size: 14px;
+      font-size: 16px;
       text-align: center;
       display: inherit;
     }

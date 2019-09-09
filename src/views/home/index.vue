@@ -30,26 +30,13 @@ import Header from '../header/header'
 export default {
   data() {
     return {
-    };
-  },
-  computed:{
-  },
-  watch:{
-  },
-  methods: {
-    
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
     }
   },
-  mounted(){
+  methods: {
   },
   components: {
     Header,
     Tab
   }
-};
+}
 </script>
